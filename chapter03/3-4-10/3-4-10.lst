@@ -1,0 +1,73 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/06/23 15:51:08
+AddVariables.asm					     Page 1 - 1
+
+
+				; AddVariables.asm - Chapter 3 example
+
+				.386
+				.model flat,stdcall
+				.stack 4096
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 20002000		firstval	dword	20002000h
+ 00000004 11111111		secondval	dword	11111111h
+ 00000008 22222222		thirdval	dword	22222222h
+ 0000000C 00000000		sum			dword	0
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  A1 00000000 R		mov eax, firstval
+ 00000005  03 05 00000004 R		add eax, secondval
+ 0000000B  03 05 00000008 R		add eax, thirdval
+ 00000011  A3 0000000C R		mov sum, eax
+
+					invoke ExitProcess, 0
+ 00000016  6A 00	   *	    push   +000000000h
+ 00000018  E8 00000000 E   *	    call   ExitProcess
+ 0000001D			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/06/23 15:51:08
+AddVariables.asm					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000010 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000001D DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001D Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+firstval . . . . . . . . . . . .	DWord	 00000000 _DATA	
+secondval  . . . . . . . . . . .	DWord	 00000004 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 0000000C _DATA	
+thirdval . . . . . . . . . . . .	DWord	 00000008 _DATA	
+
+	   0 Warnings
+	   0 Errors

@@ -84,6 +84,12 @@
       <AdditionalLibraryDirectories>C:\Irvine;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Irvine32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <MASM>
+      <IncludePaths>C:\Irvine</IncludePaths>
+      <GeneratePreprocessedSourceListing>true</GeneratePreprocessedSourceListing>
+      <ListAllAvailableInformation>true</ListAllAvailableInformation>
+      <AssembledCodeListingFile>$(ProjectName).lst</AssembledCodeListingFile>
+    </MASM>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -132,7 +138,8 @@
   <ItemGroup>
     <MASM Include="AddTwo.asm">
       <FileType>Document</FileType>
-      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Irvine</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </IncludePaths>
     </MASM>
     <MASM Include="Template.asm">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

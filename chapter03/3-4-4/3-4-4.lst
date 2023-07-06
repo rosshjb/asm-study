@@ -1,0 +1,264 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/06/23 15:36:21
+Define.asm						     Page 1 - 1
+
+
+				; Define.asm
+
+				.386
+				.model flat,stdcall
+				.stack 4096
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+				; ---------------- byte ----------------
+ 00000000 41			bvalue1	byte	'A'		; charcater literal	
+ 00000001 00			bvalue2	byte	0		; smallest unsigned byte
+ 00000002 FF			bvalue3	byte	255		; largest unsigned byte
+ 00000003 80			bvalue4	sbyte	-128	; smallest signed byte
+ 00000004 7F			bvalue5	sbyte	+127	; largest signed byte
+ 00000005 00			bvalue6	byte	?
+
+ 00000006 10			bvalue7	byte	10h
+ 00000007 20			bvalue8 byte	20h
+
+ 00000008 FF			bval1	db	255		; unsigned byte
+ 00000009 80			bval2	db	-128	; signed byte
+
+ 0000000A 0A 14 1E 28		list1	byte	10, 20, 30, 40
+
+ 0000000E 0A 14 1E 28		list2	byte	10,20,30,40
+ 00000012  32 3C 46 50				byte	50,60,70,80
+ 00000016  51 52 53 54				byte	81,82,83,84
+
+				; same content
+ 0000001A 0A 20 41 22		list3	byte	10, 32, 41h, 00100010b
+ 0000001E 0A 20 41 22		list4	byte	0Ah, 20h, 'A', 22h
+
+				; null-terminated string
+ 00000022 47 6F 6F 64 20	greeting1	byte	"Good afternoon", 0
+	   61 66 74 65 72
+	   6E 6F 6F 6E 00
+ 00000031 47 6F 6F 64 20	greeting2	byte	'Good night', 0
+	   6E 69 67 68 74
+	   00
+ 0000003C 57 65 6C 63 6F	greeting3	byte	"Welcome to the Encryption Demo program "
+	   6D 65 20 74 6F
+	   20 74 68 65 20
+	   45 6E 63 72 79
+	   70 74 69 6F 6E
+	   20 44 65 6D 6F
+	   20 70 72 6F 67
+	   72 61 6D 20
+ 00000063  63 72 65 61 74				byte	"created by Kip Irvine.", 0dh, 0ah
+	   65 64 20 62 79
+	   20 4B 69 70 20
+	   49 72 76 69 6E
+	   65 2E 0D 0A
+ 0000007B  49 66 20 79 6F				byte	"If you wish to modify this program, please "
+	   75 20 77 69 73
+	   68 20 74 6F 20
+	   6D 6F 64 69 66
+	   79 20 74 68 69
+	   73 20 70 72 6F
+	   67 72 61 6D 2C
+	   20 70 6C 65 61
+	   73 65 20
+ 000000A6  73 65 6E 64 20				byte	"send me a copy.", 0dh, 0ah, 0
+	   6D 65 20 61 20
+	   63 6F 70 79 2E
+	   0D 0A 00
+
+				; equivalent
+ 000000B8 57 65 6C 63 6F	greeting4	byte	"Welcome to the Encryption Demo program "
+	   6D 65 20 74 6F
+	   20 74 68 65 20
+	   45 6E 63 72 79
+	   70 74 69 6F 6E
+	   20 44 65 6D 6F
+	   20 70 72 6F 67
+	   72 61 6D 20
+ 000000DF 57 65 6C 63 6F	greeting5	\
+	   6D 65 20 74 6F
+	   20 74 68 65 20
+	   45 6E 63 72 79
+	   70 74 69 6F 6E
+	   20 44 65 6D 6F
+	   20 70 72 6F 67
+	   72 61 6D 20
+							byte	"Welcome to the Encryption Demo program "
+
+ 00000106  00000014 [		byte 20 dup(0)			; 20bytes, all equal to zero
+	    00
+	   ]
+ 0000011A  00000014 [		byte 20 dup(?)			; 20bytes, uninitialized
+	    00
+	   ]
+ 0000012E  00000004 [		byte 4	dup("STACK")	; 20bytes, "STACKSTACKSTACKSTACK"
+	    4B43415453
+	   ]
+
+				; ---------------- word ----------------
+ 00000142 FFFF			word1	word	65535	; largest unsigned value
+ 00000144 8000			word2	sword	-32768	; smallest signed value
+ 00000146 0000			word3	word	?		; unintialized, unsigned
+
+ 00000148 FFFF			wval1	dw		65535	; unsigned
+ 0000014A 8000			wval2	dw		-32768	; signed
+
+ 0000014C 0001 0002 0003	myWList	word	1,2,3,4,5
+	   0004 0005
+
+ 00000156  00000005 [		warray	word	5 dup(?)	; 5 values, uninitialized
+	    0000
+	   ]
+
+				; ---------------- doubleword ----------------
+ 00000160 12345678		dwval1	dword	12345678h	; unsigned
+ 00000164 80000000		dwval2	sdword	-2147483648	; signed
+ 00000168  00000014 [		dwval3	dword	20	dup(?)	; unsigned array
+	    00000000
+	   ]
+
+ 000001B8 12345678		dwval4	dd		12345678h	; unsigned
+ 000001BC 80000000		dwval5	dd		-2147483648	; signed
+
+ 000001C0 00012345		dwVal6	dword	12345h
+ 000001C4 000001C0 R		pdwVal	dword	dwVal6
+
+ 000001C8 00000001		myDWList	dword	1, 2, 3, 4, 5
+	   00000002
+	   00000003
+	   00000004
+	   00000005
+
+				; ---------------- quadword ----------------
+ 000001DC			quad1	qword	1234567812345678h
+	   1234567812345678
+ 000001E4			quad2	dq		1234567812345678h
+	   1234567812345678
+
+				; ---------------- packed bcd(tbyte) ----------------
+ 000001EC			bcdIntVal1	tbyte	80000000000000001234h	; valid
+	   80000000000000001234
+ 000001F6			bcdIntVal2	tbyte	-1234					; invalid
+	   FFFFFFFFFFFFFFFFFB2E
+
+ 00000200			posVal	real8	1.5
+	   3FF8000000000000
+ 00000208			bcdVal	tbyte	?
+	   00000000000000000000
+
+				; ---------------- floating-point ----------------
+ 00000212 BF99999A		rVal1		real4	-1.2
+ 00000216			rVal2		real8	3.2E-260
+	   0A0F7D228322BAF5
+ 0000021E			rVal3		real10	4.6E+4096
+	   7527E1D52B1C853F14BF
+
+ 00000228  00000014 [		ShortArray	real4	20 dup(0.0)
+	    00000000
+	   ]
+
+ 00000278 BF99999A		rVal4		dd		-1.2		; short real
+ 0000027C			rVal5		dq		3.2E-260	; long real
+	   0A0F7D228322BAF5
+ 00000284			rVal6		dt		4.6e+4096	; extended-precision real
+	   7527E1D52B1C853F14BF
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  DD 05 00000200 R		fld		posVal	; load onto floating-point stack
+ 00000006  DF 35 00000208 R		fbstp	bcdVal	; rounds up to 2 as packed bcd
+
+					invoke ExitProcess, 0
+ 0000000C  6A 00	   *	    push   +000000000h
+ 0000000E  E8 00000000 E   *	    call   ExitProcess
+ 00000013			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/06/23 15:36:21
+Define.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000028E DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000013 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000013 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+ShortArray . . . . . . . . . . .	DWord	 00000228 _DATA	
+bcdIntVal1 . . . . . . . . . . .	TByte	 000001EC _DATA	
+bcdIntVal2 . . . . . . . . . . .	TByte	 000001F6 _DATA	
+bcdVal . . . . . . . . . . . . .	TByte	 00000208 _DATA	
+bval1  . . . . . . . . . . . . .	Byte	 00000008 _DATA	
+bval2  . . . . . . . . . . . . .	Byte	 00000009 _DATA	
+bvalue1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+bvalue2  . . . . . . . . . . . .	Byte	 00000001 _DATA	
+bvalue3  . . . . . . . . . . . .	Byte	 00000002 _DATA	
+bvalue4  . . . . . . . . . . . .	Byte	 00000003 _DATA	
+bvalue5  . . . . . . . . . . . .	Byte	 00000004 _DATA	
+bvalue6  . . . . . . . . . . . .	Byte	 00000005 _DATA	
+bvalue7  . . . . . . . . . . . .	Byte	 00000006 _DATA	
+bvalue8  . . . . . . . . . . . .	Byte	 00000007 _DATA	
+dwVal6 . . . . . . . . . . . . .	DWord	 000001C0 _DATA	
+dwval1 . . . . . . . . . . . . .	DWord	 00000160 _DATA	
+dwval2 . . . . . . . . . . . . .	DWord	 00000164 _DATA	
+dwval3 . . . . . . . . . . . . .	DWord	 00000168 _DATA	
+dwval4 . . . . . . . . . . . . .	DWord	 000001B8 _DATA	
+dwval5 . . . . . . . . . . . . .	DWord	 000001BC _DATA	
+greeting1  . . . . . . . . . . .	Byte	 00000022 _DATA	
+greeting2  . . . . . . . . . . .	Byte	 00000031 _DATA	
+greeting3  . . . . . . . . . . .	Byte	 0000003C _DATA	
+greeting4  . . . . . . . . . . .	Byte	 000000B8 _DATA	
+greeting5  . . . . . . . . . . .	Byte	 000000DF _DATA	
+list1  . . . . . . . . . . . . .	Byte	 0000000A _DATA	
+list2  . . . . . . . . . . . . .	Byte	 0000000E _DATA	
+list3  . . . . . . . . . . . . .	Byte	 0000001A _DATA	
+list4  . . . . . . . . . . . . .	Byte	 0000001E _DATA	
+myDWList . . . . . . . . . . . .	DWord	 000001C8 _DATA	
+myWList  . . . . . . . . . . . .	Word	 0000014C _DATA	
+pdwVal . . . . . . . . . . . . .	DWord	 000001C4 _DATA	
+posVal . . . . . . . . . . . . .	QWord	 00000200 _DATA	
+quad1  . . . . . . . . . . . . .	QWord	 000001DC _DATA	
+quad2  . . . . . . . . . . . . .	QWord	 000001E4 _DATA	
+rVal1  . . . . . . . . . . . . .	DWord	 00000212 _DATA	
+rVal2  . . . . . . . . . . . . .	QWord	 00000216 _DATA	
+rVal3  . . . . . . . . . . . . .	TByte	 0000021E _DATA	
+rVal4  . . . . . . . . . . . . .	DWord	 00000278 _DATA	
+rVal5  . . . . . . . . . . . . .	QWord	 0000027C _DATA	
+rVal6  . . . . . . . . . . . . .	TByte	 00000284 _DATA	
+warray . . . . . . . . . . . . .	Word	 00000156 _DATA	
+word1  . . . . . . . . . . . . .	Word	 00000142 _DATA	
+word2  . . . . . . . . . . . . .	Word	 00000144 _DATA	
+word3  . . . . . . . . . . . . .	Word	 00000146 _DATA	
+wval1  . . . . . . . . . . . . .	Word	 00000148 _DATA	
+wval2  . . . . . . . . . . . . .	Word	 0000014A _DATA	
+
+	   0 Warnings
+	   0 Errors

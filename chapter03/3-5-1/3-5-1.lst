@@ -1,0 +1,147 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/10/23 22:21:47
+3-5-1.asm						     Page 1 - 1
+
+
+				; 3-5-1.asm
+
+				.386
+				.model flat,stdcall
+				.stack 4096
+				ExitProcess proto, dwExitCode:dword
+
+				; constants
+ = 000001F4			COUNT = 500
+ = 0000001B			Esc_key = 27
+
+ 00000000			.data
+ 00000000 0000000A			var1	dword 10
+ 00000004 00000000 R			selfPtr dword $
+ 00000008  000001F4 [			array	dword COUNT dup(0)
+	    00000000
+	   ]
+
+ 000007D8 0A 14 1E 28			list1 byte 10,20,30,40
+ = 00000004				List1Size = 4
+
+ 000007DC 0A 14 1E 28			list2 byte 10,20,30,40
+ 000007E0 = 00000004			List2Size = ($ - list2)
+
+ 000007E0 0A 14 1E 28			list3 byte 10,20,30,40
+ 000007E4  00000014 [			var2 byte 20 dup(?)
+	    00
+	   ]
+ 000007F8 = 00000018			List3Size = ($ - list3)
+
+ 000007F8 54 68 69 73 20		myString byte "This is a long string, containing"
+	   69 73 20 61 20
+	   6C 6F 6E 67 20
+	   73 74 72 69 6E
+	   67 2C 20 63 6F
+	   6E 74 61 69 6E
+	   69 6E 67
+ 00000819  61 6E 79 20 6E				 byte "any number offset characters"
+	   75 6D 62 65 72
+	   20 6F 66 66 73
+	   65 74 20 63 68
+	   61 72 61 63 74
+	   65 72 73
+ 00000835 = 0000003D			myString_len = ($ - myString)
+
+ 00000835 1000 2000 3000		list4 word 1000h, 2000h, 3000h, 4000h
+	   4000
+ 0000083D = 00000004			List4Size = ($ - list4) / 2
+
+ 0000083D 10000000			list5 dword 10000000h, 20000000h, 30000000h, 40000000h
+	   20000000
+	   30000000
+	   40000000
+ 0000084D = 00000004			List5Size = ($ - list5) / 4
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 000001F4			mov eax, COUNT
+ 00000005  A1 00000004 R		mov eax, selfPtr
+ 0000000A  B8 00000000			mov eax, 0
+				    
+ 0000000F  B0 1B			mov al, Esc_key
+ 00000011  B0 1B			mov al, 27
+
+ = 00000005				COUNT = 5
+ 00000013  B0 05			mov al, COUNT
+ = 0000000A				COUNT = 10
+ 00000015  B0 0A			mov al, COUNT
+ = 00000064				COUNT = 100
+ 00000017  B0 64			mov al, COUNT
+
+ 00000019  B8 00000000			mov eax, 0
+ 0000001E  B8 00000004			mov eax, List1Size
+ 00000023  B8 00000004			mov eax, List2Size
+ 00000028  B8 00000018			mov eax, List3Size
+
+ 0000002D  B8 0000003D			mov eax, myString_len
+
+ 00000032  B8 00000004			mov eax, List4Size
+ 00000037  B8 00000004			mov eax, List5Size
+
+					invoke ExitProcess, 0
+ 0000003C  6A 00	   *	    push   +000000000h
+ 0000003E  E8 00000000 E   *	    call   ExitProcess
+ 00000043			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/10/23 22:21:47
+3-5-1.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000084D DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000043 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000043 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+COUNT  . . . . . . . . . . . . .	Number	 00000064h   
+Esc_key  . . . . . . . . . . . .	Number	 0000001Bh   
+List1Size  . . . . . . . . . . .	Number	 00000004h   
+List2Size  . . . . . . . . . . .	Number	 00000004h   
+List3Size  . . . . . . . . . . .	Number	 00000018h   
+List4Size  . . . . . . . . . . .	Number	 00000004h   
+List5Size  . . . . . . . . . . .	Number	 00000004h   
+array  . . . . . . . . . . . . .	DWord	 00000008 _DATA	
+list1  . . . . . . . . . . . . .	Byte	 000007D8 _DATA	
+list2  . . . . . . . . . . . . .	Byte	 000007DC _DATA	
+list3  . . . . . . . . . . . . .	Byte	 000007E0 _DATA	
+list4  . . . . . . . . . . . . .	Word	 00000835 _DATA	
+list5  . . . . . . . . . . . . .	DWord	 0000083D _DATA	
+myString_len . . . . . . . . . .	Number	 0000003Dh   
+myString . . . . . . . . . . . .	Byte	 000007F8 _DATA	
+selfPtr  . . . . . . . . . . . .	DWord	 00000004 _DATA	
+var1 . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+var2 . . . . . . . . . . . . . .	Byte	 000007E4 _DATA	
+
+	   0 Warnings
+	   0 Errors

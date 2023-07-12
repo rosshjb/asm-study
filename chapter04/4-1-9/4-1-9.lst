@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 19:53:27
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 21:10:56
 moves.asm						     Page 1 - 1
 
 
@@ -64,7 +64,7 @@ moves.asm						     Page 1 - 1
  0000005D  E8 00000000 E   *	    call   ExitProcess
  00000062			main endp
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 19:53:27
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 21:10:56
 moves.asm						     Symbols 2 - 1
 
 

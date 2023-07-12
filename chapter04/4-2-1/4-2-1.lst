@@ -1,0 +1,165 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 23:59:36
+4-2-1.asm						     Page 1 - 1
+
+
+				; 4-2-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 4-2-1
+ 00000000			.data
+ 00000000 1000			    myWord word 1000h
+ 00000000			.code
+ 00000000  66| FF 05		    inc myWord
+	   00000000 R
+ 00000007  66| 8B 1D		    mov bx, myWord
+	   00000000 R
+ 0000000E  66| 4B		    dec bx
+
+				; 4-2-2
+ 00000002			.data
+ 00000002 00010000		    var1 dword 10000h
+ 00000006 00020000		    var2 dword 20000h
+ 00000010			.code
+ 00000010  A1 00000002 R	    mov eax, var1
+ 00000015  03 05 00000006 R	    add eax, var2
+
+				; 4-2-3
+ 0000000A			.data
+ 0000000A 00030000		    var3 dword 30000h
+ 0000000E 00010000		    var4 dword 10000h
+ 0000001B			.code
+ 0000001B  A1 0000000A R	    mov eax, var3
+ 00000020  2B 05 0000000E R	    sub eax, var4
+
+				; 4-2-5
+ 00000012			.data
+ 00000012 00000000		    rval sdword ?
+ 00000016 0000001A		    xval sdword 26
+ 0000001A 0000001E		    yval sdword 30
+ 0000001E 00000028		    zval sdword 40
+ 00000026			.code
+				    ; first term: -xval
+ 00000026  A1 00000016 R	    mov eax, xval
+ 0000002B  F7 D8		    neg eax
+				    ; second term: (yval - zval)
+ 0000002D  8B 1D 0000001A R	    mov ebx, yval
+ 00000033  2B 1D 0000001E R	    sub ebx, zval
+				    ; add the terms and store:
+ 00000039  03 C3		    add eax, ebx
+ 0000003B  A3 00000012 R	    mov rval, eax
+				  
+				; 4-2-6
+ 00000040			.code
+				    ; zr
+ 00000040  B9 00000001		    mov ecx, 1
+ 00000045  83 E9 01		    sub ecx, 1  ; ecx = 0, zf = 1
+
+ 00000048  B8 FFFFFFFF		    mov eax, 0ffffffffh
+ 0000004D  40			    inc eax     ; eax = 0, zf = 1
+ 0000004E  40			    inc eax     ; eax = 1, zf = 0
+ 0000004F  48			    dec eax     ; eax = 0, zf = 1
+
+				    ; cy
+ 00000050  B0 FF		    mov al, 0ffh
+ 00000052  04 01		    add al, 1       ; al = 00h, cf = 1
+				    
+ 00000054  66| B8 00FF		    mov ax, 0ffh
+ 00000058  66| 83 C0 01		    add ax, 1       ; ax = 0100h, cf = 0
+
+ 0000005C  66| B8 FFFF		    mov ax, 0ffffh
+ 00000060  66| 83 C0 01		    add ax, 1       ; ax = 0000h, cf = 1
+
+ 00000064  B0 01		    mov al, 1
+ 00000066  2C 02		    sub al, 2       ; al = ffh, cf = 1
+
+				    ; ac
+ 00000068  B0 0F		    mov al, 0fh
+ 0000006A  04 01		    add al, 1       ; al = 10h, ac = 1
+
+				    ; pe
+ 0000006C  B0 8C		    mov al, 10001100b
+ 0000006E  04 02		    add al, 00000010b   ; al = 10001110b, pf = 1
+ 00000070  2C 80		    sub al, 10000000b   ; al = 00001110b, pf = 0
+
+				    ; pl
+ 00000072  B8 00000004		    mov eax, 4
+ 00000077  83 E8 05		    sub eax, 5  ; eax = -1, sf = 1
+
+ 0000007A  B3 01		    mov bl, 1
+ 0000007C  80 EB 02		    sub bl, 2   ; bl = ffh, sf = 1
+
+				    ; ov
+ 0000007F  B0 7F		    mov al, +127
+ 00000081  04 01		    add al, 1       ; al = 80h (-128), of = 1
+
+ 00000083  B0 80		    mov al, -128
+ 00000085  2C 01		    sub al, 1      ; al = 7fh (127), of = 1
+
+ 00000087  B0 80		    mov al, -128    ; al = 10000000b
+ 00000089  F6 D8		    neg al          ; al = 10000000b, of = 1
+
+ 0000008B  B0 7F		    mov al, +127    ; al - 01111111b
+ 0000008D  F6 D8		    neg al          ; al = 10000001b, of = 0
+
+
+				    invoke ExitProcess, 0
+ 0000008F  6A 00	   *	    push   +000000000h
+ 00000091  E8 00000000 E   *	    call   ExitProcess
+ 00000096			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 23:59:36
+4-2-1.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000022 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000096 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000096 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+myWord . . . . . . . . . . . . .	Word	 00000000 _DATA	
+rval . . . . . . . . . . . . . .	DWord	 00000012 _DATA	
+var1 . . . . . . . . . . . . . .	DWord	 00000002 _DATA	
+var2 . . . . . . . . . . . . . .	DWord	 00000006 _DATA	
+var3 . . . . . . . . . . . . . .	DWord	 0000000A _DATA	
+var4 . . . . . . . . . . . . . .	DWord	 0000000E _DATA	
+xval . . . . . . . . . . . . . .	DWord	 00000016 _DATA	
+yval . . . . . . . . . . . . . .	DWord	 0000001A _DATA	
+zval . . . . . . . . . . . . . .	DWord	 0000001E _DATA	
+
+	   0 Warnings
+	   0 Errors

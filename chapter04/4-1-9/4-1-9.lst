@@ -1,0 +1,111 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 19:53:27
+moves.asm						     Page 1 - 1
+
+
+				; Data Transfer Examples (Moves.asm)
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 1000			    val1 word 1000h
+ 00000002 2000			    val2 word 2000h
+				    
+ 00000004 10 20 30 40 50	    arrayB byte 10h, 20h, 30h, 40h, 50h
+ 00000009 0100 0200 0300	    arrayW word 100h, 200h, 300h
+ 0000000F 00010000		    arrayD dword 10000h, 20000h
+	   00020000
+
+ 00000000			.code
+ 00000000			main proc
+				    ; demonstrating movzx instruction:
+ 00000000  66| BB A69B		    mov bx, 0a69bh
+ 00000004  0F B7 C3		    movzx eax, bx   ; eax = 0000a69bh
+ 00000007  0F B6 D3		    movzx edx, bl   ; edx = 0000009bh
+ 0000000A  66| 0F B6 CB		    movzx cx, bl    ; cx  = 009bh
+
+				    ; demonstrating movsx instruction:
+ 0000000E  66| BB A69B		    mov bx, 0a69bh
+ 00000012  0F BF C3		    movsx eax, bx   ; eax = ffffa69bh
+ 00000015  0F BE D3		    movsx edx, bl   ; edx = ffffff9bh
+				    
+ 00000018  B3 7B		    mov bl, 7bh
+ 0000001A  66| 0F BE CB		    movsx cx, bl    ; cx = 007bh
+
+				    ; memory-to-memory exchange:
+ 0000001E  66| A1		    mov ax, val1    ; ax = 1000h
+	   00000000 R
+ 00000024  66| 87 05		    xchg ax, val2   ; ax = 2000h, val2 = 1000h
+	   00000002 R
+ 0000002B  66| A3		    mov val1, ax    ; val1 = 2000h
+	   00000000 R
+
+				    ; direct-offset addressing (byte array):
+ 00000031  A0 00000004 R	    mov al, arrayB       ; al = 10h
+ 00000036  A0 00000005 R	    mov al, [arrayB + 1] ; al = 20h
+ 0000003B  A0 00000006 R	    mov al, [arrayB + 2] ; al = 30h
+
+				    ; direct-offset addressing (word array):
+ 00000040  66| A1		    mov ax, arrayW          ; ax = 100h
+	   00000009 R
+ 00000046  66| A1		    mov ax, [arrayW + 2]    ; ax = 200h
+	   0000000B R
+
+				    ; direct-offset addressing (doubleword array):
+ 0000004C  A1 0000000F R	    mov eax, arrayD         ; eax = 10000h
+ 00000051  A1 00000013 R	    mov eax, [arrayD + 4]   ; eax = 20000h
+ 00000056  A1 00000013 R	    mov eax, arrayD + 4     ; eax = 20000h
+
+				    invoke ExitProcess, 0
+ 0000005B  6A 00	   *	    push   +000000000h
+ 0000005D  E8 00000000 E   *	    call   ExitProcess
+ 00000062			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/12/23 19:53:27
+moves.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000017 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000062 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000062 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+arrayB . . . . . . . . . . . . .	Byte	 00000004 _DATA	
+arrayD . . . . . . . . . . . . .	DWord	 0000000F _DATA	
+arrayW . . . . . . . . . . . . .	Word	 00000009 _DATA	
+val1 . . . . . . . . . . . . . .	Word	 00000000 _DATA	
+val2 . . . . . . . . . . . . . .	Word	 00000002 _DATA	
+
+	   0 Warnings
+	   0 Errors

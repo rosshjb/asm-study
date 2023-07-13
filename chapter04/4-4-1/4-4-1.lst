@@ -1,0 +1,197 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/14/23 02:48:08
+4-4-1.asm						     Page 1 - 1
+
+
+				; 4-4-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 4-4-1
+ 00000000			.data
+ 00000000 10			    byteval byte 10h
+ 00000000			.code
+ 00000000  BE 00000000 R	    mov esi, offset byteval
+ 00000005  8A 06		    mov al, [esi]           ; al = 10h
+
+ 00000007  B3 20		    mov bl, 20h
+ 00000009  88 1E		    mov [esi], bl           ; byteval = 20h
+
+ 0000000B  FE 06		    inc byte ptr [esi]      ; byteval = 21h
+
+				; 4-4-2
+ 00000001			.data
+ 00000001 10 20 30		    arrayB byte  10h, 20h, 30h
+ 00000004 1000 2000 3000	    arrayW word  1000h, 2000h, 3000h
+ 0000000D			.code
+ 0000000D  BE 00000001 R	    mov esi, offset arrayB
+ 00000012  8A 06		    mov al, [esi]           ; al = 10h
+ 00000014  46			    inc esi
+ 00000015  8A 06		    mov al, [esi]           ; al = 20h
+ 00000017  46			    inc esi
+ 00000018  8A 06		    mov al, [esi]           ; al = 30h
+
+ 0000001A  BE 00000004 R	    mov esi, offset arrayW
+ 0000001F  66| 8B 06		    mov ax, [esi]           ; ax = 1000h
+ 00000022  83 C6 02		    add esi, 2
+ 00000025  66| 8B 06		    mov ax, [esi]           ; ax = 2000h
+ 00000028  83 C6 02		    add esi, 2
+ 0000002B  66| 8B 06		    mov ax, [esi]           ; ax = 3000h
+
+ 0000000A			.data
+ 0000000A 00010000		    arrayD dword 10000h, 20000h, 30000h
+	   00020000
+	   00030000
+ 0000002E			.code
+ 0000002E  BE 0000000A R	    mov esi, offset arrayD
+ 00000033  8B 06		    mov eax, [esi]      ; first number
+ 00000035  83 C6 04		    add esi, 4
+ 00000038  03 06		    add eax, [esi]      ; second number
+ 0000003A  83 C6 04		    add esi, 4
+ 0000003D  03 06		    add eax, [esi]      ; third number
+
+				; 4-4-3
+ 00000016			.data
+ 00000016 10 20 30		    arrayB2 byte  10h, 20h, 30h
+ 00000019 1000 2000 3000	    arrayW2 word  1000h, 2000h, 3000h
+ 0000001F 00010000		    arrayD2 dword 10000h, 20000h, 30000h
+	   00020000
+	   00030000
+ 0000003F			.code
+ 0000003F  BE 00000000		    mov esi, 0
+ 00000044  8A 86 00000016 R	    mov al, arrayB2[esi]    ; al = 10h
+
+ 0000004A  BE 00000019 R	    mov esi, offset arrayW2
+ 0000004F  66| 8B 06		    mov ax, [esi]           ; ax = 1000h
+ 00000052  66| 8B 46 02		    mov ax, [esi + 2]       ; ax = 2000h
+ 00000056  66| 8B 46 04		    mov ax, [esi + 4]       ; ax = 3000h
+
+ 0000005A  BE 00000000		    mov esi, 0
+ 0000005F  8A 04 35		    mov al, arrayB2[si]      ; al = 10h
+	   00000016 R
+ 00000066  BF 00000000		    mov edi, 0
+ 0000006B  66| 8B 04 3D		    mov ax, arrayW2[di]      ; ax = 1000h
+	   00000019 R
+ 00000073  BB 00000000		    mov ebx, 0
+ 00000078  8B 83 0000001F R	    mov eax, arrayD2[bx]     ; eax = 10000h
+
+ 0000002B			.data
+ 0000002B 00000100		    arrayD3 dword 100h, 200h, 300h, 400h
+	   00000200
+	   00000300
+	   00000400
+ 0000003B 00000001		    arrayD4 dword 1, 2, 3, 4
+	   00000002
+	   00000003
+	   00000004
+ 0000007E			.code
+ 0000007E  BE 0000000C		    mov esi, 3 * type arrayD3    ; offset of arrayD[3]
+ 00000083  8B 86 0000002B R	    mov eax, arrayD3[esi]        ; eax = 400h
+
+ 00000089  BE 00000003		    mov esi, 3                  ; subscript
+ 0000008E  8B 04 B5		    mov eax, arrayd4[esi * 4]   ; eax = 4
+	   0000003B R
+
+ 00000095  BE 00000003		    mov esi, 3                              ; subscript
+ 0000009A  8B 04 B5		    mov eax, arrayD4[esi * type arrayD4]    ; eax = 4
+	   0000003B R
+
+				; 4-4-4
+ 0000004B			.data
+ 0000004B 10 20 30 40		    arrayB3 byte 10h, 20h, 30h, 40h
+ 0000004F 0000004B R		    ptrB1 dword arrayB3
+ 00000053 0000004B R		    ptrB2 dword offset arrayB3
+ 000000A1			.code
+
+ 00000057			.data
+ 00000057 10 20 30 40		    arrayB4 byte 10h, 20h, 30h, 40h
+ 0000005B 1000 2000 3000	    arrayW3 word 1000h, 2000h, 3000h
+ 00000061 00000057 R		    ptrB3 dword arrayB4
+ 00000065 00000057 R		    ptrB4 dword offset arrayB4
+				    
+ 00000069 0000005B R		    ptrW1 dword arrayW3
+ 0000006D 0000005B R		    ptrW2 dword offset arrayW3
+
+ 00000071 10 20 30 40		    arrayB5 byte 10h, 20h, 30h, 40h
+				    pbyte typedef ptr byte
+ 00000075 00000000		    ptr1 pbyte ?
+ 00000079 00000071 R		    ptr2 pbyte arrayB5
+ 000000A1			.code
+				    invoke ExitProcess, 0
+ 000000A1  6A 00	   *	    push   +000000000h
+ 000000A3  E8 00000000 E   *	    call   ExitProcess
+ 000000A8			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/14/23 02:48:08
+4-4-1.asm						     Symbols 2 - 1
+
+
+
+
+Types:
+
+                N a m e                  Size     Attr
+
+pbyte  . . . . . . . . . . . . .	 00000004     Near32 PTR Byte
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000007D DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000A8 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000A8 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+arrayB2  . . . . . . . . . . . .	Byte	 00000016 _DATA	
+arrayB3  . . . . . . . . . . . .	Byte	 0000004B _DATA	
+arrayB4  . . . . . . . . . . . .	Byte	 00000057 _DATA	
+arrayB5  . . . . . . . . . . . .	Byte	 00000071 _DATA	
+arrayB . . . . . . . . . . . . .	Byte	 00000001 _DATA	
+arrayD2  . . . . . . . . . . . .	DWord	 0000001F _DATA	
+arrayD3  . . . . . . . . . . . .	DWord	 0000002B _DATA	
+arrayD4  . . . . . . . . . . . .	DWord	 0000003B _DATA	
+arrayD . . . . . . . . . . . . .	DWord	 0000000A _DATA	
+arrayW2  . . . . . . . . . . . .	Word	 00000019 _DATA	
+arrayW3  . . . . . . . . . . . .	Word	 0000005B _DATA	
+arrayW . . . . . . . . . . . . .	Word	 00000004 _DATA	
+byteval  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+ptr1 . . . . . . . . . . . . . .	DWord	 00000075 _DATA	
+ptr2 . . . . . . . . . . . . . .	DWord	 00000079 _DATA	
+ptrB1  . . . . . . . . . . . . .	DWord	 0000004F _DATA	
+ptrB2  . . . . . . . . . . . . .	DWord	 00000053 _DATA	
+ptrB3  . . . . . . . . . . . . .	DWord	 00000061 _DATA	
+ptrB4  . . . . . . . . . . . . .	DWord	 00000065 _DATA	
+ptrW1  . . . . . . . . . . . . .	DWord	 00000069 _DATA	
+ptrW2  . . . . . . . . . . . . .	DWord	 0000006D _DATA	
+
+	   0 Warnings
+	   0 Errors

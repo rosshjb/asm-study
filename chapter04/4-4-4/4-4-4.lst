@@ -1,0 +1,99 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/14/23 03:00:40
+Pointers (pointers.asm					     Page 1 - 1
+
+
+				title Pointers (pointers.asm)
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+				; create user-defined types.
+				pbyte  typedef ptr byte     ; pointer to bytes
+				pword  typedef ptr word     ; pointer to words
+				pdword typedef ptr dword    ; pointer to doublewords    
+
+ 00000000			.data
+ 00000000 10 20 30		    arrayB byte  10h, 20h, 30h
+ 00000003 0001 0002 0003	    arrayW word  1, 2, 3
+ 00000009 00000004		    arrayD dword 4, 5, 6
+	   00000005
+	   00000006
+
+ 00000015 00000000 R		    ptr1 pbyte  arrayB
+ 00000019 00000003 R		    ptr2 pword  arrayW
+ 0000001D 00000009 R		    ptr3 pdword arrayD
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  8B 35 00000015 R	    mov esi, ptr1
+ 00000006  8A 06		    mov al, [esi]   ; 10h
+
+ 00000008  8B 35 00000019 R	    mov esi, ptr2
+ 0000000E  66| 8B 06		    mov ax, [esi]   ; 1
+
+ 00000011  8B 35 0000001D R	    mov esi, ptr3
+ 00000017  8B 06		    mov eax, [esi]  ; 4
+
+				    invoke ExitProcess, 0
+ 00000019  6A 00	   *	    push   +000000000h
+ 0000001B  E8 00000000 E   *	    call   ExitProcess
+ 00000020			main endp
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/14/23 03:00:40
+Pointers (pointers.asm					     Symbols 2 - 1
+
+
+
+
+Types:
+
+                N a m e                  Size     Attr
+
+pbyte  . . . . . . . . . . . . .	 00000004     Near32 PTR Byte
+pdword . . . . . . . . . . . . .	 00000004     Near32 PTR DWord
+pword  . . . . . . . . . . . . .	 00000004     Near32 PTR Word
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000021 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000020 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000020 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+arrayB . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+arrayD . . . . . . . . . . . . .	DWord	 00000009 _DATA	
+arrayW . . . . . . . . . . . . .	Word	 00000003 _DATA	
+ptr1 . . . . . . . . . . . . . .	DWord	 00000015 _DATA	
+ptr2 . . . . . . . . . . . . . .	DWord	 00000019 _DATA	
+ptr3 . . . . . . . . . . . . . .	DWord	 0000001D _DATA	
+
+	   0 Warnings
+	   0 Errors

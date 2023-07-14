@@ -1,0 +1,76 @@
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/14/23 22:19:47
+4-6-1.asm						     Page 1 - 1
+
+
+				; 4-6-1.asm
+
+				ExitProcess proto
+
+ 00000000			.data
+ 00000000 80000000		    myDword dword 80000000h
+ 00000004 55			    myByte  byte  55h
+ 00000005 6666			    myWord  word  6666h
+ 00000007 000A 0014 001E	    myArray word  10, 20, 30, 40
+	   0028
+ 00000000			.code
+ 00000000			main proc
+ 00000000  48/ B8		    mov rax, 0ABCDEF0AFFFFFFFFh ; 64-bit immediate operand
+	   ABCDEF0AFFFFFFFF
+ 0000000A  48/ B8		    mov rax, 0FFFFFFFFh         ; rax = 00000000FFFFFFFFh
+	   00000000FFFFFFFF
+				    
+ 00000014  48/ C7 C0		    mov rax, 06666h             ; clears bits 16-63
+	   00006666
+ 0000001B  48/ C7 C0		    mov rax, 055h               ; clear bits 8-63
+	   00000055
+
+ 00000022  48/ B8		    mov rax, 0FFFFFFFFFFFFFFFFh
+	   FFFFFFFFFFFFFFFF
+ 0000002C  8B 05 00000000 R	    mov eax, myDword            ; rax = 0000000080000000h
+
+ 00000032  48/ B8		    mov rax, 0FFFFFFFFFFFFFFFFh
+	   FFFFFFFFFFFFFFFF
+ 0000003C  66| 8B 05		    mov ax, myWord              ; bits 16-63 are not affected
+	   00000005 R
+
+ 00000043  48/ B8		    mov rax, 0FFFFFFFFFFFFFFFFh
+	   FFFFFFFFFFFFFFFF
+ 0000004D  8A 05 00000004 R	    mov al, myByte              ; bits 8-63 are not affected
+
+ 00000053  BB FFFFFFFF		    mov ebx, 0FFFFFFFFh
+ 00000058  48/ C7 C0		    mov rax, 0
+	   00000000
+ 0000005F  48/ 63 C3		    movsxd rax, ebx             ; rax = FFFFFFFFFFFFFFFFh
+
+ 00000062  48/ BE		    mov rsi, offset myArray
+	   0000000000000007 R
+
+ 0000006C  B9 00000000		    mov ecx, 0
+ 00000071  E8 00000000 E	    call ExitProcess
+ 00000076			main endp
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/14/23 22:19:47
+4-6-1.asm						     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000076 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+myArray  . . . . . . . . . . . .	Word	 00000007 _DATA	
+myByte . . . . . . . . . . . . .	Byte	 00000004 _DATA	
+myDword  . . . . . . . . . . . .	DWord	 00000000 _DATA	
+myWord . . . . . . . . . . . . .	Word	 00000005 _DATA	
+
+	   0 Warnings
+	   0 Errors

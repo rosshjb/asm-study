@@ -1,0 +1,57 @@
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/14/23 22:36:44
+sumarray_64.asm						     Page 1 - 1
+
+
+				; Summing an Array (sumarray_64.asm)
+
+				ExitProcess proto
+
+ 00000000			.data
+ 00000000			    intarray qword 1000000000000h, 2000000000000h,
+	   0001000000000000
+	   0002000000000000
+	   0003000000000000
+	   0004000000000000
+				                   3000000000000h, 4000000000000h
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  48/ BF		    mov rdi, offset intarray    ; rdi = address of intarray
+	   0000000000000000 R
+ 0000000A  48/ C7 C1		    mov rcx, lengthof intarray  ; initialize loop counter
+	   00000004
+ 00000011  48/ C7 C0		    mov rax, 0                  ; sum = 0
+	   00000000
+ 00000018			L1:                             ; mark beginning of loop
+ 00000018  48/ 03 07		    add rax, [rdi]              ; add an integer
+ 0000001B  48/ 83 C7 08		    add rdi, type intarray      ; point to next element
+ 0000001F  E2 F7		    loop L1                     ; repeat until rcx = 0
+
+ 00000021  B9 00000000		    mov ecx, 0                  ; ExitProcess return value
+ 00000026  E8 00000000 E	    call ExitProcess
+
+ 0000002B			main endp
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/14/23 22:36:44
+sumarray_64.asm						     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 0000002B Public
+  L1 . . . . . . . . . . . . . .	L 	 00000018 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+intarray . . . . . . . . . . . .	QWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

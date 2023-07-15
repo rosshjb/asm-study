@@ -1,0 +1,82 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/15/23 21:43:50
+5-2-1.asm						     Page 1 - 1
+
+
+				; 5-2-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 00000000		    theSum dword ?
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 00010000		    mov eax, 10000h ; argument
+ 00000005  BB 00020000		    mov ebx, 20000h ; argument
+ 0000000A  B9 00030000		    mov ecx, 30000h ; argument
+ 0000000F  E8 0000000C		    call sumof      ; eax = (eax + ebx + ecx)
+ 00000014  A3 00000000 R	    mov theSum, eax ; save the sum
+
+				    invoke ExitProcess, 0
+ 00000019  6A 00	   *	    push   +000000000h
+ 0000001B  E8 00000000 E   *	    call   ExitProcess
+ 00000020			main endp
+
+				; --------------------------------------------------------
+				; Calculates and returns the sum of three 32-bit integers.
+				; Receives: EAX, EBX, ECX, the three integers. May be
+				;           signed or unsigned.
+				; Returns: EAX = sum
+				; --------------------------------------------------------
+ 00000020			sumof proc
+ 00000020  03 C3		    add eax, ebx
+ 00000022  03 C1		    add eax, ecx
+ 00000024  C3			    ret
+ 00000025			sumof endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/15/23 21:43:50
+5-2-1.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000025 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000020 Public STDCALL
+sumof  . . . . . . . . . . . . .	P Near	 00000020 _TEXT	Length= 00000005 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+theSum . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

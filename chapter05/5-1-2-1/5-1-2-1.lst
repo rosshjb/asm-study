@@ -1,0 +1,101 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/15/23 17:36:59
+5-1-2-1.asm						     Page 1 - 1
+
+
+				; 5-1-2-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 00000000		    saveFlags dword ?
+ 00000000			.code
+ 00000000			main proc
+ 00000000  9C			    pushfd                  ; save the flags
+ 00000001  B8 FFFFFFFF		    mov eax, 0FFFFFFFFh
+ 00000006  83 C0 01		    add eax, 1
+ 00000009  9D			    popfd                   ; restore the flags
+
+ 0000000A  9C			    pushfd                  ; push flags on stack
+ 0000000B  8F 05 00000000 R	    pop saveFlags           ; copy into a variable
+ 00000011  B8 FFFFFFFF		    mov eax, 0FFFFFFFFh
+ 00000016  83 C0 01		    add eax, 1
+ 00000019  FF 35 00000000 R	    push saveFlags          ; push saved flag values
+ 0000001F  9D			    popfd                   ; copy into the flags
+
+ 00000020  E8 0000000C		    call mysub
+
+ 00000025  E8 00000019		    call readvalue
+
+				    invoke ExitProcess, 0
+ 0000002A  6A 00	   *	    push   +000000000h
+ 0000002C  E8 00000000 E   *	    call   ExitProcess
+ 00000031			main endp
+
+ 00000031			mysub proc
+ 00000031  60			    pushad ; save general-purpose registers
+
+ 00000032  B8 00000010		    mov eax, 10h
+ 00000037  BA 00000020		    mov edx, 20h
+ 0000003C  B9 00000030		    mov ecx, 30h
+
+ 00000041  61			    popad  ; restore general-purpose registers
+ 00000042  C3			    ret
+ 00000043			mysub endp
+
+ 00000043			readvalue proc
+ 00000043  60			    pushad          ; save general-purpose registers
+
+ 00000044  B8 00000010		    mov eax, 10h    ; return_value
+
+ 00000049  61			    popad           ; overwrites eax!
+ 0000004A  C3			    ret
+ 0000004B			readvalue endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/15/23 17:36:59
+5-1-2-1.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000004B DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000031 Public STDCALL
+mysub  . . . . . . . . . . . . .	P Near	 00000031 _TEXT	Length= 00000012 Public STDCALL
+readvalue  . . . . . . . . . . .	P Near	 00000043 _TEXT	Length= 00000008 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+saveFlags  . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

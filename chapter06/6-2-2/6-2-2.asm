@@ -80,7 +80,7 @@ L1:
 ; 6-2-9
     mov al, 10101010b
     test al, 0          ; set zero flag
-    and al, 0           ; set zreo flag
+    and al, 0           ; set zero flag
     or al, 1            ; clear zero flag
 
     mov al, 00101010b

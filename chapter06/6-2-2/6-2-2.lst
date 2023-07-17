@@ -1,0 +1,147 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/17/23 18:32:41
+6-2-2.asm						     Page 1 - 1
+
+
+				; 6-2-2.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 6-2-2
+ 00000000			.code
+ 00000000  B0 AE		    mov al, 10101110b
+ 00000002  24 F6		    and al, 11110110b   ; clear bits 0 and 3, leave others unchanged.
+				                        ; result in al = 10100110b
+
+ 00000000			.data
+ 00000000 48 65 6C 6C 6F	    array byte "Hello"
+ 00000004			.code
+ 00000004  B9 00000005		    mov ecx, lengthof array
+ 00000009  BE 00000000 R	    mov esi, offset array
+ 0000000E			L1:
+ 0000000E  80 26 DF		    and byte ptr [esi], 11011111b   ; clear bit 5
+ 00000011  46			    inc esi
+ 00000012  E2 FA		    loop L1
+
+				; 6-2-3
+ 00000014			.code
+ 00000014  B0 E3		    mov al, 11100011b
+ 00000016  0C 04		    or  al, 00000100b   ; result in al = 11100111b
+
+				; 6-2-4
+ 00000005			.data
+ = 80000007			    setX = 10000000000000000000000000000111b
+ = 82A00763			    setY = 10000010101000000000011101100011b
+ 00000018			.code
+ 00000018  B8 80000007		    mov eax, setX
+ 0000001D  83 E0 10		    and eax, 10000b ; is element[4] a member of setX?
+
+ 00000020  B8 80000007		    mov eax, setX
+ 00000025  F7 D0		    not eax
+
+ 00000027  B8 80000007		    mov eax, setX
+ 0000002C  25 82A00763		    and eax, setY
+
+ 00000031  B8 80000007		    mov eax, setX
+ 00000036  0D 82A00763		    or  eax, setY
+
+				; 6-2-5
+ 0000003B  B0 B5		    mov al, 10110101b   ; 5 bits = odd parity
+ 0000003D  34 00		    xor al, 0           ; parity flag clear (odd)
+ 0000003F  B0 CC		    mov al, 11001100b   ; 4 bits = even parity
+ 00000041  34 00		    xor al, 0           ; parity flag set (even)
+
+ 00000043  66| B8 64C1		    mov ax, 64c1h       ; 01100100 11000001
+ 00000047  32 E0		    xor ah, al          ; parity flag set (even)
+
+				; 6-2-6
+ 00000049  B0 F0		    mov al, 11110000b
+ 0000004B  F6 D0		    not al              ; al = 00001111b
+
+				; 6-2-7
+ 0000004D  B0 25		    mov  al, 00100101b
+ 0000004F  A8 09		    test al, 00001001b  ; zf = 0
+
+ 00000051  B0 24		    mov  al, 00100100b
+ 00000053  A8 09		    test al, 00001001b  ; zf = 1
+
+				; 6-2-8
+ 00000055  66| B8 0005		    mov ax, 5
+ 00000059  66| 83 F8 0A		    cmp ax, 10          ; zf = 0 and cf = 1
+
+ 0000005D  66| B8 03E8		    mov ax, 1000
+ 00000061  66| B9 03E8		    mov cx, 1000
+ 00000065  66| 3B C8		    cmp cx, ax          ; zf = 1 and cf = 0
+
+ 00000068  66| BE 0069		    mov si, 105
+ 0000006C  66| 83 FE 00		    cmp si, 0           ; zf = 0 and cf = 0
+
+				; 6-2-9
+ 00000070  B0 AA		    mov al, 10101010b
+ 00000072  A8 00		    test al, 0          ; set zero flag
+ 00000074  24 00		    and al, 0           ; set zreo flag
+ 00000076  0C 01		    or al, 1            ; clear zero flag
+
+ 00000078  B0 2A		    mov al, 00101010b
+ 0000007A  0C 80		    or al, 80h          ; set sign flag
+ 0000007C  24 7F		    and al, 7fh         ; clear sign flag
+
+ 0000007E  B0 7F		    mov al, 7fh         ; al = +127
+ 00000080  FE C0		    inc al              ; al = 80h (-128), of = 1
+ 00000082  83 C8 00		    or eax, 0           ; clear overflow flag
+
+				    invoke ExitProcess, 0
+ 00000085  6A 00	   *	    push   +000000000h
+ 00000087  E8 00000000 E   *	    call   ExitProcess
+ 0000008C			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/17/23 18:32:41
+6-2-2.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000005 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000008C DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000008C Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000000E _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array  . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+setX . . . . . . . . . . . . . .	Number	 80000007h   
+setY . . . . . . . . . . . . . .	Number	 82A00763h   
+
+	   0 Warnings
+	   0 Errors

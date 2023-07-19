@@ -1,0 +1,75 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 16:34:03
+6-3-4-6.asm						     Page 1 - 1
+
+
+				; 6-3-4-6.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				includelib irvine32.lib
+
+				ExitProcess proto, dwExitCode:dword
+				Delay proto
+				ReadKey proto
+
+ 00000000			.data
+ 00000000 00			    charv byte ?
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 0000000A		L1: mov eax, 10     ; create 10 ms delay
+ 00000005  E8 00000000 E	    call Delay
+ 0000000A  E8 00000000 E	    call ReadKey    ; check for key
+ 0000000F  74 EF		    jz L1           ; repeat if no key
+ 00000011  A2 00000000 R	    mov charv, al    ; save the character
+				    
+ 00000016  B9 00000000		    mov ecx, 0
+ 0000001B  E8 00000000 E	    call ExitProcess
+ 00000020			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 16:34:03
+6-3-4-6.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000001 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000020 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Delay  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ReadKey  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000020 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000000 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+charv  . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

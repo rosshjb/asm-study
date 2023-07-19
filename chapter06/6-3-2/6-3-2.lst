@@ -1,0 +1,261 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 16:26:43
+6-3-2.asm						     Page 1 - 1
+
+
+				; 6-3-2.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 6-3-2-1
+ 00000000  B8 00000005		    mov eax, 5
+ 00000005  83 F8 05		    cmp eax, 5
+ 00000008  74 05		    je L1           ; jump if equal
+
+ 0000000A  B8 00000001		    mov eax, 1
+ 0000000F			L1:
+ 0000000F  B8 00000000		    mov eax, 0
+
+				; 6-3-2-2
+ 00000014  66| B8 0005		    mov ax, 5
+ 00000018  66| 83 F8 06		    cmp ax, 6
+ 0000001C  7C 05		    jl L2           ; jump if less
+
+ 0000001E  B8 00000001		    mov eax, 1
+ 00000023			L2:
+ 00000023  B8 00000000		    mov eax, 0
+
+				; 6-3-2-3
+ 00000028  66| B8 0005		    mov ax, 5
+ 0000002C  66| 83 F8 04		    cmp ax, 4
+ 00000030  7F 05		    jg L3           ; jump if greater
+
+ 00000032  B8 00000001		    mov eax, 1
+ 00000037			L3:
+ 00000037  B8 00000000		    mov eax, 0
+
+				; 6-3-3-1
+ 0000003C  BA 0000A523		    mov edx, 0A523h
+ 00000041  81 FA 0000A523	    cmp edx, 0A523h
+ 00000047  75 07		    jne L4          ; jump not taken
+ 00000049  74 05		    je  L4          ; jump is taken
+ 0000004B  B8 00000001		    mov eax, 1
+ 00000050			L4:
+ 00000050  B8 00000000		    mov eax, 0
+
+				; 6-3-3-2
+ 00000055  66| BB 1234		    mov bx, 1234h
+ 00000059  66| 81 EB 1234	    sub bx, 1234h
+ 0000005E  75 07		    jne L5          ; jump not taken
+ 00000060  74 05		    je  L5          ; jump is taken
+ 00000062  B8 00000001		    mov eax, 1
+ 00000067			L5:
+ 00000067  B8 00000000		    mov eax, 0
+
+				; 6-3-3-3
+ 0000006C  66| B9 FFFF		    mov cx, 0FFFFh
+ 00000070  66| 41		    inc cx
+ 00000072  67& E3 05		    jcxz L6          ; jump is taken
+ 00000075  B8 00000001		    mov eax, 1
+ 0000007A			L6:
+ 0000007A  B8 00000000		    mov eax, 0
+
+				; 6-3-3-4
+ 0000007F  B9 00000001		    mov ecx, 1
+ 00000084  33 C9		    xor ecx, ecx
+ 00000086  E3 05		    jecxz L7        ; jump is taken
+ 00000088  B8 00000001		    mov eax, 1
+ 0000008D			L7:
+ 0000008D  B8 00000000		    mov eax, 0
+
+				; 6-3-3-5
+ 00000092  B0 7F		    mov al, +127    ; hexadecimal value is 7Fh
+ 00000094  3C 80		    cmp al, -128    ; hexadecimal value is 80h
+ 00000096  77 07		    ja IsAbove      ; jump not taken, because 7Fh < 80h
+ 00000098  7F 05		    jg IsGreater    ; jump taken, because 7Fh > 80h (+127 > -128)
+ 0000009A  B8 00000001		    mov eax, 1
+ 0000009F			IsAbove:
+ 0000009F			IsGreater:
+ 0000009F  B8 00000000		    mov eax, 0
+
+				; 6-3-3-6
+ 000000A4  BA FFFFFFFF		    mov edx, -1
+ 000000A9  83 FA 00		    cmp edx, 0
+ 000000AC  7D 09		    jnl  L8         ; jump not taken (-1 >= 0 is false)
+ 000000AE  7F 07		    jnle L8         ; jump not taken (-1 > 0 is false)
+ 000000B0  7C 05		    jl   L8         ; jump is taken  (-1 < 0 is true)
+ 000000B2  B8 00000001		    mov eax, 1
+ 000000B7			L8:
+ 000000B7  B8 00000000		    mov eax, 0
+
+				; 6-3-3-7
+ 000000BC  66| BB 0020		    mov bx, +32
+ 000000C0  66| 83 FB DD		    cmp bx, -35
+ 000000C4  7E 09		    jng  L9         ; jump not taken (+32 <= -35 is false)
+ 000000C6  7C 07		    jnge L9         ; jump not taken (+32 < -35 is false)
+ 000000C8  7D 05		    jge  L9         ; jump is taken (+32 >= -35 is true)
+ 000000CA  B8 00000001		    mov eax, 1
+ 000000CF			L9:
+ 000000CF  B8 00000000		    mov eax, 0
+
+				; 6-3-3-8
+ 000000D4  B9 00000000		    mov ecx, 0
+ 000000D9  83 F9 00		    cmp ecx, 0
+ 000000DC  7F 07		    jg  L10         ; jump not taken (0 > 0 is false)
+ 000000DE  7D 05		    jnl L10         ; jump is taken (0 >= 0 is true)
+ 000000E0  B8 00000001		    mov eax, 1
+ 000000E5			L10:
+ 000000E5  B8 00000000		    mov eax, 0
+
+				; 6-3-3-9
+ 000000EA  B9 00000000		    mov ecx, 0
+ 000000EF  83 F9 00		    cmp ecx, 0
+ 000000F2  7C 07		    jl  L11         ; jump not taken (0 < 0 is false)
+ 000000F4  7E 05		    jng L11         ; jump is taken (0 <= 0 is true)
+ 000000F6  B8 00000001		    mov eax, 1
+ 000000FB			L11:
+ 000000FB  B8 00000000		    mov eax, 0
+
+				; 6-3-4-1
+ 00000000			.data
+ 00000000 20			    status1 byte 00100000b
+ 00000100			.code
+ 00000100  A0 00000000 R	    mov al, status1
+ 00000105  A8 20		    test al, 00100000b  ; test bit 5
+ 00000107  75 05		    jnz DeviceOffline
+ 00000109  B8 00000001		    mov eax, 1
+ 0000010E			DeviceOffline:
+ 0000010E  B8 00000000		    mov eax, 0
+
+				; 6-3-4-2
+ 00000001			.data
+ 00000001 D0			    status2 byte 11010000b
+ 00000113			.code
+ 00000113  A0 00000001 R	    mov al, status2
+ 00000118  A8 13		    test al, 00010011b  ; test any of the bits 0, 1, 4
+ 0000011A  75 05		    jnz InputDataByte
+ 0000011C  B8 00000001		    mov eax, 1
+ 00000121			InputDataByte:
+ 00000121  B8 00000000		    mov eax, 0
+
+				; 6-3-4-3
+ 00000002			.data
+ 00000002 CE			    status3 byte 11001110b
+ 00000126			.code
+ 00000126  A0 00000002 R	    mov al, status3
+ 0000012B  24 8C		    and al, 10001100b   ; mask bits 2, 3, 7
+ 0000012D  3C 8C		    cmp al, 10001100b   ; all bits set?
+ 0000012F  74 05		    je ResetMachine     ; yes: jump to label
+ 00000131  B8 00000001		    mov eax, 1
+ 00000136			ResetMachine:
+ 00000136  B8 00000000		    mov eax, 0
+
+				; 6-3-4-4
+ 0000013B  B8 00000006		    mov eax, 6
+ 00000140  BB 00000004		    mov ebx, 4
+ 00000145  8B D0		    mov edx, eax        ; assume eax is larger
+ 00000147  3B C3		    cmp eax, ebx        ; if eax is >= ebx
+ 00000149  73 07		    jae L12             ;   jump to L12
+ 0000014B  8B D3		    mov edx, ebx        ; else move ebx to edx
+ 0000014D  B8 00000001		    mov eax, 1
+ 00000152			L12:
+ 00000152  B8 00000000		    mov eax, 0
+
+				; 6-3-4-5
+ 00000003			.data
+ 00000003 0003			    v1 word 3
+ 00000005 0001			    v2 word 1
+ 00000007 0002			    v3 word 2
+ 00000157			.code
+ 00000157  66| A1		    mov ax, v1          ; assume v1 is smallest
+	   00000003 R
+ 0000015D  66| 3B 05		    cmp ax, v2          ; if ax <= v2
+	   00000005 R
+ 00000164  76 06		    jbe L13             ;   jump to L13
+ 00000166  66| A1		    mov ax, v2          ; else move v2 to ax
+	   00000005 R
+ 0000016C			L13:
+ 0000016C  66| 3B 05		    cmp ax, v3          ; if ax <= v3
+	   00000007 R
+ 00000173  76 0B		    jbe L14             ;   jump to L14
+ 00000175  66| A1		    mov ax, v3          ; else move v3 to ax
+	   00000007 R
+ 0000017B  B8 00000001		    mov eax, 1
+ 00000180			L14:
+ 00000180  B8 00000000		    mov eax, 0
+
+ 00000185  B9 00000000		    mov ecx, 0
+ 0000018A  E8 00000000 E	    call ExitProcess
+ 0000018F			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 16:26:43
+6-3-2.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000009 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000018F DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000018F Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000000F _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000023 _TEXT	
+  L3 . . . . . . . . . . . . . .	L Near	 00000037 _TEXT	
+  L4 . . . . . . . . . . . . . .	L Near	 00000050 _TEXT	
+  L5 . . . . . . . . . . . . . .	L Near	 00000067 _TEXT	
+  L6 . . . . . . . . . . . . . .	L Near	 0000007A _TEXT	
+  L7 . . . . . . . . . . . . . .	L Near	 0000008D _TEXT	
+  IsAbove  . . . . . . . . . . .	L Near	 0000009F _TEXT	
+  IsGreater  . . . . . . . . . .	L Near	 0000009F _TEXT	
+  L8 . . . . . . . . . . . . . .	L Near	 000000B7 _TEXT	
+  L9 . . . . . . . . . . . . . .	L Near	 000000CF _TEXT	
+  L10  . . . . . . . . . . . . .	L Near	 000000E5 _TEXT	
+  L11  . . . . . . . . . . . . .	L Near	 000000FB _TEXT	
+  DeviceOffline  . . . . . . . .	L Near	 0000010E _TEXT	
+  InputDataByte  . . . . . . . .	L Near	 00000121 _TEXT	
+  ResetMachine . . . . . . . . .	L Near	 00000136 _TEXT	
+  L12  . . . . . . . . . . . . .	L Near	 00000152 _TEXT	
+  L13  . . . . . . . . . . . . .	L Near	 0000016C _TEXT	
+  L14  . . . . . . . . . . . . .	L Near	 00000180 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+status1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+status2  . . . . . . . . . . . .	Byte	 00000001 _DATA	
+status3  . . . . . . . . . . . .	Byte	 00000002 _DATA	
+v1 . . . . . . . . . . . . . . .	Word	 00000003 _DATA	
+v2 . . . . . . . . . . . . . . .	Word	 00000005 _DATA	
+v3 . . . . . . . . . . . . . . .	Word	 00000007 _DATA	
+
+	   0 Warnings
+	   0 Errors

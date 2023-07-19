@@ -1,0 +1,82 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 18:20:48
+loopnz.asm						     Page 1 - 1
+
+
+				; loopnz.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 FFFD FFFA FFFF	    array sword -3, -6, -1, -10, 10, 30, 40, 4
+	   FFF6 000A 001E
+	   0028 0004
+ 00000010 0000			    sentinel sword 0
+ 00000000			.code
+ 00000000			main proc
+ 00000000  BE 00000000 R	    mov esi, offset array
+ 00000005  B9 00000008		    mov ecx, lengthof array
+ 0000000A  66| F7 06 8000	L1: test word ptr [esi], 8000h      ; test the sign bit
+				    
+ 0000000F  9C			    pushfd                          ; push flags on stack
+ 00000010  83 C6 02		    add esi, type array             ; move to next position
+ 00000013  9D			    popfd                           ; pop flags from stack
+
+ 00000014  E0 F4		    loopnz L1                       ; continue loop
+ 00000016  75 03		    jnz quit                        ; none found
+ 00000018  83 EE 02		    sub esi, type array             ; esi points to value
+
+ 0000001B			quit:
+				    invoke ExitProcess, 0
+ 0000001B  6A 00	   *	    push   +000000000h
+ 0000001D  E8 00000000 E   *	    call   ExitProcess
+ 00000022			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 18:20:48
+loopnz.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000012 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000022 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000022 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000000A _TEXT	
+  quit . . . . . . . . . . . . .	L Near	 0000001B _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array  . . . . . . . . . . . . .	Word	 00000000 _DATA	
+sentinel . . . . . . . . . . . .	Word	 00000010 _DATA	
+
+	   0 Warnings
+	   0 Errors

@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 18:20:48
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 19:51:47
 loopnz.asm						     Page 1 - 1
 
 
@@ -36,7 +36,7 @@ loopnz.asm						     Page 1 - 1
  00000022			main endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 18:20:48
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 19:51:47
 loopnz.asm						     Symbols 2 - 1
 
 

@@ -1,0 +1,249 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 22:40:30
+6-5-1.asm						     Page 1 - 1
+
+
+				; 6-5-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 6-5-1-1
+ 00000000			.data
+ 00000000 0000000A		    op1 dword 10
+ 00000004 0000000A		    op2 dword 10
+ 00000008 00			    x1 byte ?
+ 00000009 00			    y1 byte ?
+ 00000000			.code
+ 00000000  A1 00000000 R	    mov eax, op1
+ 00000005  3B 05 00000004 R	    cmp eax, op2    ; op1 == op2?
+ 0000000B  75 0E		    jne L1          ; no: skip next
+ 0000000D  C6 05 00000008 R	    mov x1, 1       ; yes: assign x and y
+	   01
+ 00000014  C6 05 00000009 R	    mov y1, 2
+	   02
+ 0000001B  90			L1: nop
+
+				; 6-5-1-2
+ 0000000A			.data
+ 0000000A 0000000A		    op3 dword 10
+ 0000000E 00000014		    op4 dword 20
+ 00000012 00			    x2 byte ?
+ 00000013 00			    y2 byte ?
+ 0000001C			.code
+ 0000001C  A1 0000000A R	    mov eax, op3
+ 00000021  3B 05 0000000E R	    cmp eax, op4    ; op3 == op4?
+ 00000027  74 02		    je L2           ; yes: jump to L2
+ 00000029  EB 0E		    jmp L3          ; no: skip assignments
+ 0000002B  C6 05 00000012 R	L2: mov x2, 1
+	   01
+ 00000032  C6 05 00000013 R	    mov y2, 2
+	   02
+ 00000039  90			L3: nop
+
+				; 6-5-1-3
+ 00000014			.data
+ 00000014 0000			    clusterSize word ?
+ 00000016 20			    terrabytes byte 32
+ 0000003A			.code
+ 0000003A  66| C7 05		    mov clusterSize, 8192   ; assume larger cluster
+	   00000014 R
+	   2000
+ 00000043  80 3D 00000016 R	    cmp terrabytes, 16      ; smaller than 16 TB?
+	   10
+ 0000004A  73 09		    jae next1
+ 0000004C  66| C7 05		    mov clusterSize, 4096   ; switch to smaller cluster
+	   00000014 R
+	   1000
+ 00000055			next1:
+ 00000055  90			    nop
+
+				; 6-5-1-4
+ 00000017			.data
+ 00000017 0000000A		    op5 dword 10
+ 0000001B 0000000A		    op6 dword 10
+ 00000056			.code
+ 00000056  A1 00000017 R	    mov eax, op5        ; move op1 to a register
+ 0000005B  3B 05 0000001B R	    cmp eax, op6        ; op5 > op6?
+ 00000061  7F 07		    jg a1               ; yes: call Routine1
+ 00000063  E8 00000090		    call Routine2       ; no: call Routin2
+ 00000068  EB 05		    jmp a2              ; exit the if statement
+ 0000006A  E8 00000088		a1: call Routine1
+ 0000006F  90			a2: nop
+
+				; 6-5-1-5
+ 0000001F			.data
+ 0000001F 0000000A		    op7 dword 10
+ 00000023 00000014		    op8 dword 20
+ 00000027 0000001E		    x3 dword 30
+ 0000002B 00000028		    y3 dword 40
+ 00000070			.code
+ 00000070  A1 0000001F R	    mov eax, op7
+ 00000075  3B 05 00000023 R	    cmp eax, op8    ; op7 == op8?
+ 0000007B  75 1B		    jne L5          ; no: call Routine5
+				    ; process the inner if-else statement
+ 0000007D  A1 00000027 R	    mov eax, x3
+ 00000082  3B 05 0000002B R	    cmp eax, y3     ; x3 > y3?
+ 00000088  7F 07		    jg L4           ; yes: call Routine3
+ 0000008A  E8 0000006B		    call Routine4   ; no: call Routine4
+ 0000008F  EB 0C		    jmp L6          ; and exit
+ 00000091  E8 00000063		L4: call Routine3   ; call Routine3
+ 00000096  EB 05		    jmp L6          ; and exit
+ 00000098  E8 0000005E		L5: call Routine5
+ 0000009D  90			L6: nop
+
+				; 6-5-2-1
+ 0000002F			.data
+ 0000002F 00000000		    x4 dword ?
+ 0000009E			.code
+ 0000009E  B0 03		    mov al, 3
+ 000000A0  B3 02		    mov bl, 2
+ 000000A2  B1 01		    mov cl, 1
+ 000000A4  3A C3		    cmp al, bl      ; first expression...
+ 000000A6  77 02		    ja L7
+ 000000A8  EB 10		    jmp next2
+ 000000AA  3A D9		L7: cmp bl, cl      ; second expression...
+ 000000AC  77 02		    ja L8
+ 000000AE  EB 0A		    jmp next2
+ 000000B0  C7 05 0000002F R	L8: mov x4, 1       ; both true: set x to 1
+	   00000001
+ 000000BA  90			next2: nop
+
+				; 6-5-2-2
+ 00000033			.data
+ 00000033 00000000		    x5 dword ?
+ 000000BB			.code
+ 000000BB  B0 03		    mov al, 3
+ 000000BD  B3 02		    mov bl, 2
+ 000000BF  B1 01		    mov cl, 1
+ 000000C1  3A C3		    cmp al, bl      ; first expression...
+ 000000C3  76 0E		    jbe next3       ; quit if false
+ 000000C5  3A D9		    cmp bl, cl      ; second expression
+ 000000C7  76 0A		    jbe next3       ; quit if false
+ 000000C9  C7 05 00000033 R	    mov x5, 1       ; both are true
+	   00000001
+ 000000D3  90			next3: nop
+
+				; 6-5-2-3
+ 00000037			.data
+ 00000037 00000000		    x6 dword ?
+ 000000D4			.code
+ 000000D4  B0 01		    mov al, 1
+ 000000D6  B3 03		    mov bl, 3
+ 000000D8  B1 02		    mov cl, 2
+ 000000DA  3A C3		    cmp al, bl      ; 1: compare al to bl
+ 000000DC  77 04		    ja L9           ; if true, skip second expression
+ 000000DE  3A D9		    cmp bl, cl      ; 2: compare bl to cl
+ 000000E0  76 0A		    jbe next4       ; false: skip next statement
+ 000000E2  C7 05 00000037 R	L9: mov x6, 1       ; true: set x = 1
+	   00000001
+ 000000EC  90			next4: nop
+
+ 000000ED  B9 00000000		    mov ecx, 0
+ 000000F2  E8 00000000 E	    call ExitProcess
+ 000000F7			main endp
+
+ 000000F7			Routine1 proc
+ 000000F7  C3			    ret
+ 000000F8			Routine1 endp
+
+ 000000F8			Routine2 proc
+ 000000F8  C3			    ret
+ 000000F9			Routine2 endp
+
+ 000000F9			Routine3 proc
+ 000000F9  C3			    ret
+ 000000FA			Routine3 endp
+
+ 000000FA			Routine4 proc
+ 000000FA  C3			    ret
+ 000000FB			Routine4 endp
+
+ 000000FB			Routine5 proc
+ 000000FB  C3			    ret
+ 000000FC			Routine5 endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/19/23 22:40:30
+6-5-1.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000003B DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000FC DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Routine1 . . . . . . . . . . . .	P Near	 000000F7 _TEXT	Length= 00000001 Public STDCALL
+Routine2 . . . . . . . . . . . .	P Near	 000000F8 _TEXT	Length= 00000001 Public STDCALL
+Routine3 . . . . . . . . . . . .	P Near	 000000F9 _TEXT	Length= 00000001 Public STDCALL
+Routine4 . . . . . . . . . . . .	P Near	 000000FA _TEXT	Length= 00000001 Public STDCALL
+Routine5 . . . . . . . . . . . .	P Near	 000000FB _TEXT	Length= 00000001 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000F7 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000001B _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000002B _TEXT	
+  L3 . . . . . . . . . . . . . .	L Near	 00000039 _TEXT	
+  next1  . . . . . . . . . . . .	L Near	 00000055 _TEXT	
+  a1 . . . . . . . . . . . . . .	L Near	 0000006A _TEXT	
+  a2 . . . . . . . . . . . . . .	L Near	 0000006F _TEXT	
+  L4 . . . . . . . . . . . . . .	L Near	 00000091 _TEXT	
+  L5 . . . . . . . . . . . . . .	L Near	 00000098 _TEXT	
+  L6 . . . . . . . . . . . . . .	L Near	 0000009D _TEXT	
+  L7 . . . . . . . . . . . . . .	L Near	 000000AA _TEXT	
+  L8 . . . . . . . . . . . . . .	L Near	 000000B0 _TEXT	
+  next2  . . . . . . . . . . . .	L Near	 000000BA _TEXT	
+  next3  . . . . . . . . . . . .	L Near	 000000D3 _TEXT	
+  L9 . . . . . . . . . . . . . .	L Near	 000000E2 _TEXT	
+  next4  . . . . . . . . . . . .	L Near	 000000EC _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+clusterSize  . . . . . . . . . .	Word	 00000014 _DATA	
+op1  . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+op2  . . . . . . . . . . . . . .	DWord	 00000004 _DATA	
+op3  . . . . . . . . . . . . . .	DWord	 0000000A _DATA	
+op4  . . . . . . . . . . . . . .	DWord	 0000000E _DATA	
+op5  . . . . . . . . . . . . . .	DWord	 00000017 _DATA	
+op6  . . . . . . . . . . . . . .	DWord	 0000001B _DATA	
+op7  . . . . . . . . . . . . . .	DWord	 0000001F _DATA	
+op8  . . . . . . . . . . . . . .	DWord	 00000023 _DATA	
+terrabytes . . . . . . . . . . .	Byte	 00000016 _DATA	
+x1 . . . . . . . . . . . . . . .	Byte	 00000008 _DATA	
+x2 . . . . . . . . . . . . . . .	Byte	 00000012 _DATA	
+x3 . . . . . . . . . . . . . . .	DWord	 00000027 _DATA	
+x4 . . . . . . . . . . . . . . .	DWord	 0000002F _DATA	
+x5 . . . . . . . . . . . . . . .	DWord	 00000033 _DATA	
+x6 . . . . . . . . . . . . . . .	DWord	 00000037 _DATA	
+y1 . . . . . . . . . . . . . . .	Byte	 00000009 _DATA	
+y2 . . . . . . . . . . . . . . .	Byte	 00000013 _DATA	
+y3 . . . . . . . . . . . . . . .	DWord	 0000002B _DATA	
+
+	   0 Warnings
+	   0 Errors

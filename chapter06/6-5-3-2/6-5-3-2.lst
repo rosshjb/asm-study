@@ -1,0 +1,103 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/20/23 05:31:57
+flowchart.as						     Page 1 - 1
+
+
+				title flowchart.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 00000000		    sum dword 0
+
+ 00000004 00000032		    sample dword 50
+
+ 00000008 0000000A		    array dword 10, 60, 20, 33, 72, 89, 45, 65, 72, 18
+	   0000003C
+	   00000014
+	   00000021
+	   00000048
+	   00000059
+	   0000002D
+	   00000041
+	   00000048
+	   00000012
+ 00000030 = 0000000A		    arraysize = ($ - array) / type array
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 00000000		    mov eax, 0              ; sum
+ 00000005  8B 15 00000004 R	    mov edx, sample
+ 0000000B  BE 00000000		    mov esi, 0              ; index
+ 00000010  B9 0000000A		    mov ecx, arraysize
+
+ 00000015  3B F1		L1: cmp esi, ecx            ; if esi < ecx
+ 00000017  7C 02		    jl L2
+ 00000019  EB 15		    jmp L5
+ 0000001B  39 14 B5		L2: cmp array[esi * 4], edx ; if array[esi] > edx
+	   00000008 R
+ 00000022  7F 02		    jg L3
+ 00000024  EB 07		    jmp L4
+ 00000026  03 04 B5		L3: add eax, array[esi * 4]
+	   00000008 R
+ 0000002D  46			L4: inc esi
+ 0000002E  EB E5		    jmp L1
+ 00000030  A3 00000000 R	L5: mov sum, eax
+
+ 00000035  B9 00000000		    mov ecx, 0
+ 0000003A  E8 00000000 E	    call ExitProcess
+ 0000003F			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/20/23 05:31:57
+flowchart.as						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000030 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000003F DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000003F Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000015 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000001B _TEXT	
+  L3 . . . . . . . . . . . . . .	L Near	 00000026 _TEXT	
+  L4 . . . . . . . . . . . . . .	L Near	 0000002D _TEXT	
+  L5 . . . . . . . . . . . . . .	L Near	 00000030 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+arraysize  . . . . . . . . . . .	Number	 0000000Ah   
+array  . . . . . . . . . . . . .	DWord	 00000008 _DATA	
+sample . . . . . . . . . . . . .	DWord	 00000004 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

@@ -1,0 +1,66 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 20:24:00
+	7-2-2.as					     Page 1 - 1
+
+
+				title 7-2-2.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 0000007B		    mov eax, 123
+ 00000005  8B D8		    mov ebx, eax
+
+ 00000007  C1 E0 05		    shl eax, 5      ; multiply by 2^5
+ 0000000A  C1 E3 02		    shl ebx, 2      ; multiply by 2^2
+ 0000000D  03 C3		    add eax, ebx    ; add the products
+
+ 0000000F  B9 00000000		    mov ecx, 0
+ 00000014  E8 00000000 E	    call ExitProcess
+ 00000019			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 20:24:00
+	7-2-2.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000019 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000019 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

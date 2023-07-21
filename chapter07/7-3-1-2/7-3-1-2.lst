@@ -1,0 +1,52 @@
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/21/23 22:45:13
+7-3-1-2.as						     Page 1 - 1
+
+
+				title 7-3-1-2.asm
+
+				ExitProcess proto
+
+ 00000000			.data
+ 00000000			    multiplier qword 10h
+	   0000000000000010
+ 00000000			.code
+ 00000000			main proc
+ 00000000  48/ B8		    mov rax, 0FFFF0000FFFF0000h
+	   FFFF0000FFFF0000
+ 0000000A  48/ C7 C3		    mov rbx, 2
+	   00000002
+ 00000011  48/ F7 E3		    mul rbx         ; RDX:RAX = 0000000000000001 FFFE0001FFFE0000h, CF = 1
+
+ 00000014  48/ B8		    mov rax, 0AABBBBCCCCDDDDh
+	   00AABBBBCCCCDDDD
+ 0000001E  48/ F7 25		    mul multiplier  ; RDX:RAX = 0000000000000000 0AABBBBCCCCDDDD0h, CF = 0
+	   00000000 R
+
+ 00000025  48/ C7 C1		    mov rcx, 0
+	   00000000
+ 0000002C  E8 00000000 E	    call ExitProcess
+ 00000031			main endp
+
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/21/23 22:45:13
+7-3-1-2.as						     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 00000031 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+multiplier . . . . . . . . . . .	QWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

@@ -1,0 +1,79 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 22:38:06
+	7-3-1.as					     Page 1 - 1
+
+
+				TITLE 7-3-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 7-3-1
+ 00000000  B0 05		    mov al, 5h
+ 00000002  B3 10		    mov bl, 10h
+ 00000004  F6 E3		    mul bl          ; AX = 0050h, CF = 0
+
+ 00000000			.data
+ 00000000 2000			    val1 word 2000h
+ 00000002 0100			    val2 word 0100h
+ 00000006			.code
+ 00000006  66| A1		    mov ax, val1
+	   00000000 R
+ 0000000C  66| F7 25		    mul val2         ; DX:AX = 00200000h, CF = 1
+	   00000002 R
+
+ 00000013  B8 00012345		    mov eax, 12345h
+ 00000018  BB 00001000		    mov ebx, 1000h
+ 0000001D  F7 E3		    mul ebx         ; EDX:EAX = 0000000012345000h, CF = 0
+
+ 0000001F  B9 00000000		    mov ecx, 0
+ 00000024  E8 00000000 E	    call ExitProcess
+ 00000029			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 22:38:06
+	7-3-1.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000029 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000029 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+val1 . . . . . . . . . . . . . .	Word	 00000000 _DATA	
+val2 . . . . . . . . . . . . . .	Word	 00000002 _DATA	
+
+	   0 Warnings
+	   0 Errors

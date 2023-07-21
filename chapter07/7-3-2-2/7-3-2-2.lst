@@ -1,0 +1,104 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/22/23 01:28:38
+7-3-2-2.as						     Page 1 - 1
+
+
+				title 7-3-2-2.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 0004			    word1  sword  4
+ 00000002 00000004		    dword1 sdword 4
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B0 30		    mov al, 48
+ 00000002  B3 04		    mov bl, 4
+ 00000004  F6 EB		    imul bl             ; AX = 00C0h, OF = 1
+
+ 00000006  B0 FC		    mov al, -4
+ 00000008  B3 04		    mov bl, 4
+ 0000000A  F6 EB		    imul bl             ; AX = FFF0h, OF = 0
+
+ 0000000C  66| B8 0030		    mov ax, 48
+ 00000010  66| BB 0004		    mov bx, 4
+ 00000014  66| F7 EB		    imul bx             ; DX:AX = 000000C0h, OF = 0
+
+ 00000017  B8 00499980		    mov eax, +4823424
+ 0000001C  BB FFFFFE59		    mov ebx, -423
+ 00000021  F7 EB		    imul ebx            ; EDX:EAX = FFFFFFFF86635D80h, OF = 0
+
+ 00000023  66| B8 FFF0		    mov ax, -16         ; AX = -16
+ 00000027  66| BB 0002		    mov bx, 2           ; BX = 2
+ 0000002B  66| 0F AF D8		    imul bx, ax         ; BX = -32
+ 0000002F  66| 6B DB 02		    imul bx, 2          ; BX = -64
+ 00000033  66| 0F AF 1D		    imul bx, word1      ; BX = -256
+	   00000000 R
+
+ 0000003B  B8 FFFFFFF0		    mov eax, -16        ; EAX = -16
+ 00000040  BB 00000002		    mov ebx, 2          ; EBX = 2
+ 00000045  0F AF D8		    imul ebx, eax       ; EBX = -32
+ 00000048  6B DB 02		    imul ebx, 2         ; EBX = -64
+ 0000004B  0F AF 1D		    imul ebx, dword1    ; EBX = -256
+	   00000002 R
+
+ 00000052  66| B8 8300		    mov ax, -32000
+ 00000056  66| 6B C0 02		    imul ax, 2          ; OF = 1
+
+ 0000005A  66| 6B 1D		    imul bx, word1, -16             ; BX = word1 * -16   = -64
+	   00000000 R F0
+ 00000062  6B 1D 00000002 R	    imul ebx, dword1, -16           ; EBX = dword1 * -16 = -64
+	   F0
+ 00000069  69 1D 00000002 R	    imul ebx, dword1, -2000000000   ; signed overflow! -> 2329B000h = 589934592d != FFFFFFFE.2329B000h = -8000000000d
+	   88CA6C00
+
+ 00000073  B9 00000000		    mov ecx, 0
+ 00000078  E8 00000000 E	    call ExitProcess
+ 0000007D			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/22/23 01:28:38
+7-3-2-2.as						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000006 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007D DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007D Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+dword1 . . . . . . . . . . . . .	DWord	 00000002 _DATA	
+word1  . . . . . . . . . . . . .	Word	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

@@ -1,0 +1,72 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 16:21:38
+multishift.as						     Page 1 - 1
+
+
+				title multishift.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ = 00000003			    ArraySize = 3
+ 00000000  00000003 [		    array byte ArraySize dup(99h)   ; 1001 pattern in each nybble
+	    99
+	   ]
+ 00000000			.code
+ 00000000			main proc
+ 00000000  BE 00000000		    mov esi, 0
+ 00000005  D0 AE 00000002 R	    shr array[esi + 2], 1           ; high byte
+ 0000000B  D0 9E 00000001 R	    rcr array[esi + 1], 1           ; middle byte, include Carry flag
+ 00000011  D0 9E 00000000 R	    rcr array[esi], 1               ; low byte, include Carry flag
+				    ; [esi + 2] [esi + 1] [esi] = 
+
+ 00000017  B9 00000000		    mov ecx, 0
+ 0000001C  E8 00000000 E	    call ExitProcess
+ 00000021			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/21/23 16:21:38
+multishift.as						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000003 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000021 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000021 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+ArraySize  . . . . . . . . . . .	Number	 00000003h   
+array  . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

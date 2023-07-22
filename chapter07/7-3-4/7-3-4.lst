@@ -1,0 +1,216 @@
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/23/23 03:10:11
+	7-3-4.as					     Page 1 - 1
+
+
+				title 7-3-4.asm
+
+				ExitProcess proto
+
+ 00000000			.data
+ 00000000			    dividend qword 0000000800300020h
+	   0000000800300020
+ 00000008 00000100		    divisor1 dword 00000100h
+
+ 0000000C			    dividend_hi qword 0000000000000108h
+	   0000000000000108
+ 00000014			    dividend_lo qword 0000000033300020h
+	   0000000033300020
+ 0000001C			    divisor2    qword 0000000000010000h
+	   0000000000010000
+ 00000000			.code
+ 00000000			main proc
+				; 7-3-4
+ 00000000  66| B8 0083		    mov ax, 0083h       ; dividend
+ 00000004  B3 02		    mov bl, 2           ; divisor
+ 00000006  F6 F3		    div bl              ; AL = 41h, AH = 01h
+
+ 00000008  66| BA 0000		    mov dx, 0           ; dividend, high 
+ 0000000C  66| B8 8003		    mov ax, 8003h       ; dividend, low
+ 00000010  66| B9 0100		    mov cx, 100h        ; divisor
+ 00000014  66| F7 F1		    div cx              ; AX = 0080h, DX = 0003h
+
+ 00000017  8B 15 00000004 R	    mov edx, dword ptr dividend + 4 ; high doubleword
+ 0000001D  8B 05 00000000 R	    mov eax, dword ptr dividend     ; low doubleword
+ 00000023  F7 35 00000008 R	    div divisor1                    ; EAX = 08003000h, EAX = 00000020h
+
+ 00000029  48/ 8B 15		    mov rdx, dividend_hi
+	   0000000C R
+ 00000030  48/ 8B 05		    mov rax, dividend_lo
+	   00000014 R
+ 00000037  48/ F7 35		    div divisor2                    ; RAX = 0108000000003330h
+	   0000001C R
+				                                    ; RDX = 0000000000000020h
+
+				; 7-3-5
+ 00000024			.data
+ 00000024 FF9B			    wordVal1 sword -101     ; FF9Bh
+ 0000003E			.code
+ 0000003E  66| BA 0000		    mov dx, 0
+ 00000042  66| 8B 05		    mov ax, wordVal1        ; DX:AX = 0000FF9Bh (+65435)
+	   00000024 R
+ 00000049  66| 99		    cwd                     ; DX:AX = FFFFFF9Bh (-101)
+ 0000004B  66| BB 0002		    mov bx, 2               ; BX is the divisor
+ 0000004F  66| F7 FB		    idiv bx                 ; divide DX:AX by BX (signed operation)
+				                            ; AX = FFCEh (-50d), DX = FFFFh (-1d)
+
+ 00000026			.data
+ 00000026 9B			    byteValue  sbyte  -101
+ 00000027 FF9B			    wordValue  sword  -101
+ 00000029 FFFFFF9B		    dwordValue sdword -101
+ 00000052			.code
+ 00000052  8A 05 00000026 R	    mov al, byteValue   ; AL = 9Bh
+ 00000058  66| 98		    cbw                 ; AX = FF9Bh
+
+ 0000005A  66| 8B 05		    mov ax, wordValue   ; AX = FF9Bh
+	   00000027 R
+ 00000061  66| 99		    cwd                 ; DX:AX = FFFFFF9Bh
+
+ 00000063  8B 05 00000029 R	    mov eax, dwordValue ; EAX = FFFFFF9Bh
+ 00000069  99			    cdq                 ; EDX:EAX = FFFFFFFF.FFFFFF9Bh
+
+ 0000002D			.data
+ 0000002D D0			    byteVal  sbyte  -48     ; D0h
+ 0000002E EC78			    wordVal2 sword  -5000   ; EC78h
+ 00000030 0000C350		    dwordVal sdword +50000  ; 0000C350h 
+ 0000006A			.code
+ 0000006A  8A 05 0000002D R	    mov al, byteVal     ; lower half of dividend
+ 00000070  66| 98		    cbw                 ; sign extend AL into AH
+ 00000072  B3 05		    mov bl, +5          ; divisor
+ 00000074  F6 FB		    idiv bl             ; AL = F7h(-9d), AH = FDh(-3d)
+
+ 00000076  66| 8B 05		    mov ax, wordVal2    ; dividend, low
+	   0000002E R
+ 0000007D  66| 99		    cwd                 ; extend AX into DX
+ 0000007F  66| BB 0100		    mov bx, +256        ; divisor
+ 00000083  66| F7 FB		    idiv bx             ; AX = FFEDh(-19d), DX = FF78h(-136d)
+
+ 00000086  8B 05 00000030 R	    mov eax, dwordVal   ; dividend, low
+ 0000008C  99			    cdq                 ; extend EAX into EDX
+ 0000008D  BB FFFFFF00		    mov ebx, -256       ; divisor
+ 00000092  F7 FB		    idiv ebx            ; EAX = FFFFFF3Dh(-195d), EDX = 00000050h(80d)
+
+				    ;mov ax, 1000h
+				    ;mov bl, 10h
+				    ;div bl              ; AL, the quotient cannot hold 100h
+
+ 00000094  B8 00001000		    mov eax, 1000h      ; 4096d
+ 00000099  99			    cdq
+ 0000009A  BB 00000010		    mov ebx, 10h        ; 16d
+ 0000009F  F7 F3		    div ebx             ; EAX = 00000100h(256d), EDX = 00000000h
+
+ 00000034			.data
+ 00000034 1000			    dividend_ word 1000h    ; 4096d
+ 00000036 30			    divisor_  byte 30h      ; 48d
+ 000000A1			.code
+ 000000A1  66| B8 0000		    mov ax, 0
+ 000000A5  66| 8B 05		    mov ax, dividend_
+	   00000034 R
+ 000000AC  8A 1D 00000036 R	    mov bl, divisor_
+ 000000B2  80 FB 00		    cmp bl, 0           ; check the divisor
+ 000000B5  74 02		    je NoDivideZero     ; zero? display error
+ 000000B7  F6 F3		    div bl              ; AL = 55h(85d), AH = 10h(16d)
+ 000000B9			NoDivideZero:
+ 000000B9  90			    nop
+
+				; 7-3-6
+ 00000037			.data
+ 00000037 00000300		    var1 dword 00000300h   ; 768d
+ 0000003B 00000200		    var2 dword 00000200h   ; 512d
+ 0000003F 00000400		    var3 dword 00000400h   ; 1024d
+ 00000043 00000000		    var4 dword ?
+ 000000BA			.code
+				; var4 = (var1 + var2) * var3
+ 000000BA  8B 05 00000037 R	    mov eax, var1
+ 000000C0  03 05 0000003B R	    add eax, var2       ; EAX = var1 + var2
+ 000000C6  F7 25 0000003F R	    mul var3            ; EAX = EAX * var3
+ 000000CC  72 08		    jc tooBig
+ 000000CE  89 05 00000043 R	    mov var4, eax       ; var4 = 00140000h = 1310720d
+ 000000D4  EB 01		    jmp next
+ 000000D6			tooBig:
+ 000000D6  90			    nop                 ; display error message
+ 000000D7			next:
+ 000000D7  90			    nop
+
+				; var4 = (var1 * 5) / (var2 - 3)
+ 000000D8  8B 05 00000037 R	    mov eax, var1       ; left side
+ 000000DE  BB 00000005		    mov ebx, 5
+ 000000E3  F7 E3		    mul ebx             ; EDX:EAX = product
+
+ 000000E5  8B 1D 0000003B R	    mov ebx, var2       ; right side
+ 000000EB  83 EB 03		    sub ebx, 3
+
+ 000000EE  F7 F3		    div ebx             ; final division
+ 000000F0  89 05 00000043 R	    mov var4, eax       ; var4 = 00000007h = 7d
+
+				; var4 = (var1 * -5) / (-var2 % var3)
+ 000000F6  8B 05 0000003B R	    mov eax, var2       ; begin right side
+ 000000FC  F7 D8		    neg eax
+ 000000FE  99			    cdq                 ; sign-extend dividend
+ 000000FF  F7 3D 0000003F R	    idiv var3           ; EDX(remainder) = -var2 % var3
+ 00000105  8B DA		    mov ebx, edx        ; EBX = right side
+
+ 00000107  B8 FFFFFFFB		    mov eax, -5         ; begin left side
+ 0000010C  F7 2D 00000037 R	    imul var1           ; EDX:EAX = var1 * -5
+				    
+ 00000112  F7 FB		    idiv ebx            ; final division; EAX = 00000007h = 7d, EDX = FFFFFF00h = -256d
+ 00000114  89 05 00000043 R	    mov var4, eax       ; var4 = 00000007h = 7d
+
+				; 7-4-1
+ 0000011A			.code
+ 0000011A  B2 00		    mov dl, 0           ; clear upper half 
+ 0000011C  B0 FF		    mov al, 0FFh        ; AL    = FFh               = 255d = 11111111b
+ 0000011E  04 FF		    add al, 0FFh        ; AL    = FFh + FFh = FEh   = 254d = 11111110b
+ 00000120  80 D2 00		    adc dl, 0           ; DL:AL = 01FEh             = 510d = 00000001.11111110b
+
+ 00000123  BA 00000000		    mov edx, 0          ; clear upper half
+ 00000128  B8 FFFFFFFF		    mov eax, 0FFFFFFFFh
+ 0000012D  83 C0 FF		    add eax, 0FFFFFFFFh ; FFFFFFFFh + FFFFFFFFh = FFFFFFFEh
+ 00000130  83 D2 00		    adc edx, 0          ; EDX:EAX = 00000001.FFFFFFFEh
+
+ 00000133  B9 00000000		    mov ecx, 0
+ 00000138  E8 00000000 E	    call ExitProcess
+ 0000013D			main endp
+
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/23/23 03:10:11
+	7-3-4.as					     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 0000013D Public
+  NoDivideZero . . . . . . . . .	L 	 000000B9 _TEXT	
+  tooBig . . . . . . . . . . . .	L 	 000000D6 _TEXT	
+  next . . . . . . . . . . . . .	L 	 000000D7 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+byteValue  . . . . . . . . . . .	Byte	 00000026 _DATA	
+byteVal  . . . . . . . . . . . .	Byte	 0000002D _DATA	
+dividend_hi  . . . . . . . . . .	QWord	 0000000C _DATA	
+dividend_lo  . . . . . . . . . .	QWord	 00000014 _DATA	
+dividend_  . . . . . . . . . . .	Word	 00000034 _DATA	
+dividend . . . . . . . . . . . .	QWord	 00000000 _DATA	
+divisor1 . . . . . . . . . . . .	DWord	 00000008 _DATA	
+divisor2 . . . . . . . . . . . .	QWord	 0000001C _DATA	
+divisor_ . . . . . . . . . . . .	Byte	 00000036 _DATA	
+dwordValue . . . . . . . . . . .	DWord	 00000029 _DATA	
+dwordVal . . . . . . . . . . . .	DWord	 00000030 _DATA	
+var1 . . . . . . . . . . . . . .	DWord	 00000037 _DATA	
+var2 . . . . . . . . . . . . . .	DWord	 0000003B _DATA	
+var3 . . . . . . . . . . . . . .	DWord	 0000003F _DATA	
+var4 . . . . . . . . . . . . . .	DWord	 00000043 _DATA	
+wordVal1 . . . . . . . . . . . .	Word	 00000024 _DATA	
+wordVal2 . . . . . . . . . . . .	Word	 0000002E _DATA	
+wordValue  . . . . . . . . . . .	Word	 00000027 _DATA	
+
+	   0 Warnings
+	   0 Errors

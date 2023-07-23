@@ -1,0 +1,64 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/23/23 18:11:10
+	7-4-3.as					     Page 1 - 1
+
+
+				title 7-4-3.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  BA 00000007		    mov edx, 7          ; upper half.
+ 00000005  B8 00000001		    mov eax, 1          ; lower half.           EDX:EAX = 00000007.00000001h
+ 0000000A  83 E8 02		    sub eax, 2          ; subtract 2.           EDX:EAX = 00000007.FFFFFFFFh
+ 0000000D  83 DA 00		    sbb edx, 0          ; subtract upper half.  EDX:EAX = 00000006.FFFFFFFFh
+
+ 00000010  B9 00000000		    mov ecx, 0
+ 00000015  E8 00000000 E	    call ExitProcess
+ 0000001A			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/23/23 18:11:10
+	7-4-3.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000001A DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001A Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

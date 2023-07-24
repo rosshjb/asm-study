@@ -1,0 +1,185 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
+	8-2-5.as					     Page 1 - 1
+
+
+				title 8-2-5.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				RandomRange proto
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ = 00000064			    count = 100
+ 00000000  00000064 [		    array word count dup(?)
+	    0000
+	   ]
+ 00000000			.code
+ 00000000			main proc
+ 00000000  E8 00000027		    call MySub1
+ 00000005  E8 0000003A		    call MySub2
+ 0000000A  E8 0000004D		    call MySub3
+
+ 0000000F  68 00000000 R	    push offset array
+ 00000014  6A 64		    push count
+ 00000016  E8 0000005B		    call ArrayFill
+
+ 0000001B  6A 2A		    push 2Ah    ; '*'
+ 0000001D  E8 0000007A		    call makeArray
+
+ 00000022  B9 00000000		    mov ecx, 0
+ 00000027  E8 00000000 E	    call ExitProcess
+ 0000002C			main endp
+
+ 0000002C			MySub1 proc
+ 0000002C  55			    push ebp
+ 0000002D  8B EC		    mov ebp, esp
+
+ 0000002F  83 EC 08		    sub esp, 8                  ; create locals
+
+ 00000032  C7 45 FC		    mov dword ptr [ebp - 4], 10 ; X = 10
+	   0000000A
+ 00000039  C7 45 F8		    mov dword ptr [ebp - 8], 20 ; Y = 20
+	   00000014
+
+ 00000040  8B E5		    mov esp, ebp                ; remove locals from stack
+
+ 00000042  5D			    pop ebp
+ 00000043  C3			    ret
+ 00000044			MySub1 endp
+
+ 00000044			MySub2 proc
+ 000000C8			.data
+ = dword ptr [ebp - 4]		    x_local equ dword ptr [ebp - 4]
+ = dword ptr [ebp - 8]		    y_local equ dword ptr [ebp - 8]
+ 00000044			.code
+ 00000044  55			    push ebp
+ 00000045  8B EC		    mov ebp, esp
+
+ 00000047  83 EC 08		    sub esp, 8      ; create locals
+
+ 0000004A  C7 45 FC		    mov x_local, 10 ; X = 10
+	   0000000A
+ 00000051  C7 45 F8		    mov y_local, 20 ; Y = 20
+	   00000014
+
+ 00000058  8B E5		    mov esp, ebp    ; remove locals from stack
+
+ 0000005A  5D			    pop ebp
+ 0000005B  C3			    ret
+ 0000005C			MySub2 endp
+
+ 0000005C			MySub3 proc
+ 0000005C  55			    push ebp
+ 0000005D  8B EC		    mov ebp, esp
+
+ 0000005F  83 EC 08		    sub esp, 8                  ; create locals
+ 00000062  53			    push ebx                    ; save callee-saved (non-volatile) register
+
+ 00000063  C7 45 FC		    mov dword ptr [ebp - 4], 11 ; X = 11
+	   0000000B
+ 0000006A  C7 45 F8		    mov dword ptr [ebp - 8], 12 ; Y = 22
+	   0000000C
+
+ 00000071  5B			    pop ebx                     ; restore callee-saved (non-volatile) register
+ 00000072  8B E5		    mov esp, ebp                ; remove locals from stack
+
+ 00000074  5D			    pop ebp
+ 00000075  C3			    ret
+ 00000076			MySub3 endp
+
+ 00000076			ArrayFill proc
+ 00000076  55			    push ebp
+ 00000077  8B EC		    mov ebp, esp
+
+ 00000079  60			    pushad              ; save registers
+ 0000007A  8B 75 0C		    mov esi, [ebp + 12] ; offset of array
+ 0000007D  8B 4D 08		    mov ecx, [ebp + 8]  ; array length
+ 00000080  83 F9 00		    cmp ecx, 0          ; ECX == 0?
+ 00000083  74 12		    je L2               ; yes: skip over loop
+ 00000085			L1:
+ 00000085  B8 00010000		    mov eax, 10000h     ; get random 0 - FFFFh
+ 0000008A  E8 00000000 E	    call RandomRange    ; from the link library
+ 0000008F  66| 89 06		    mov [esi], ax       ; insert value in array
+ 00000092  83 C6 02		    add esi, type word  ; move to next element
+ 00000095  E2 EE		    loop L1
+ 00000097			L2:
+ 00000097  61			    popad               ; restore registers
+
+ 00000098  5D			    pop ebp
+ 00000099  C2 0008		    ret 8               ; clean up arguments from the stack
+ 0000009C			ArrayFill endp
+
+ 0000009C			makeArray proc
+ 0000009C  55			    push ebp
+ 0000009D  8B EC		    mov ebp, esp
+
+ 0000009F  83 EC 20		    sub esp, 32             ; keep it aligned on dword boundary: 30 -> 32
+ 000000A2  8D 75 E2		    lea esi, [ebp - 30]     ; load address of myString at EBP - 30
+ 000000A5  B9 0000001E		    mov ecx, 30             ; loop counter
+ 000000AA  8B 45 08		    mov eax, [ebp + 8]      ; the '*' character parameter
+ 000000AD  88 06		L1: mov byte ptr [esi], al  ; fill one position
+ 000000AF  46			    inc esi                 ; move to next
+ 000000B0  E2 FB		    loop L1                 ; continue until ECX = 0
+ 000000B2  83 C4 20		    add esp, 32             ; remove the array (restore ESP)
+
+ 000000B5  5D			    pop ebp
+ 000000B6  C2 0004		    ret 4
+ 000000B9			makeArray endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
+	8-2-5.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000C8 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000B9 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArrayFill  . . . . . . . . . . .	P Near	 00000076 _TEXT	Length= 00000026 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000085 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000097 _TEXT	
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+MySub1 . . . . . . . . . . . . .	P Near	 0000002C _TEXT	Length= 00000018 Public STDCALL
+MySub2 . . . . . . . . . . . . .	P Near	 00000044 _TEXT	Length= 00000018 Public STDCALL
+MySub3 . . . . . . . . . . . . .	P Near	 0000005C _TEXT	Length= 0000001A Public STDCALL
+RandomRange  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000002C Public STDCALL
+makeArray  . . . . . . . . . . .	P Near	 0000009C _TEXT	Length= 0000001D Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 000000AD _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array  . . . . . . . . . . . . .	Word	 00000000 _DATA	
+count  . . . . . . . . . . . . .	Number	 00000064h   
+x_local  . . . . . . . . . . . .	Text   	 dword ptr [ebp - 4]
+y_local  . . . . . . . . . . . .	Text   	 dword ptr [ebp - 8]
+
+	   0 Warnings
+	   0 Errors

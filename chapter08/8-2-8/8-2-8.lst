@@ -1,0 +1,155 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 21:41:03
+	8-2-8.as					     Page 1 - 1
+
+
+				title 8-2-8.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  E8 00000028		    call MySub1
+ 00000005  E8 00000029		    call MySub2
+ 0000000A  E8 0000002A		    call MySub3
+ 0000000F  E8 0000002D		    call MySub4
+ 00000014  E8 00000030		    call MySub5
+ 00000019  E8 00000033		    call MySub6
+ 0000001E  E8 00000036		    call Example1
+
+ 00000023  B9 00000000		    mov ecx, 0
+ 00000028  E8 00000000 E	    call ExitProcess
+ 0000002D			main endp
+
+ 0000002D			MySub1 proc
+ 0000002D  C8 0000 00		    enter 0, 0
+
+ 00000031  C9			    leave
+ 00000032  C3			    ret
+ 00000033			MySub1 endp
+
+ 00000033			MySub2 proc
+ 00000033  C8 0008 00		    enter 8, 0
+
+ 00000037  C9			    leave
+ 00000038  C3			    ret
+ 00000039			MySub2 endp
+
+ 00000039			MySub3 proc
+				    local var1:byte
+				    ; ...
+ 00000039  55		   *	    push   ebp
+ 0000003A  8B EC	   *	    mov    ebp, esp
+ 0000003C  83 C4 FC	   *	    add    esp, 0FFFFFFFCh
+				    ret
+ 0000003F  C9		   *	    leave  
+ 00000040  C3		   *	    ret    00000h
+ 00000041			MySub3 endp
+8-2-8.asm(41) : warning A6004:procedure argument or local not referenced : var1
+
+ 00000041			MySub4 proc
+				    local temp:dword, swapFlag:byte
+				    ; ...
+ 00000041  55		   *	    push   ebp
+ 00000042  8B EC	   *	    mov    ebp, esp
+ 00000044  83 C4 F8	   *	    add    esp, 0FFFFFFF8h
+				    ret
+ 00000047  C9		   *	    leave  
+ 00000048  C3		   *	    ret    00000h
+ 00000049			MySub4 endp
+8-2-8.asm(47) : warning A6004:procedure argument or local not referenced : temp
+8-2-8.asm(47) : warning A6004:procedure argument or local not referenced : swapFlag
+
+ 00000049			MySub5 proc
+				    local pArray:ptr word
+				    ; ...
+ 00000049  55		   *	    push   ebp
+ 0000004A  8B EC	   *	    mov    ebp, esp
+ 0000004C  83 C4 FC	   *	    add    esp, 0FFFFFFFCh
+				    ret
+ 0000004F  C9		   *	    leave  
+ 00000050  C3		   *	    ret    00000h
+ 00000051			MySub5 endp
+8-2-8.asm(53) : warning A6004:procedure argument or local not referenced : pArray
+
+ 00000051			MySub6 proc
+				    local tempArray[10]:dword
+				    ; ...
+ 00000051  55		   *	    push   ebp
+ 00000052  8B EC	   *	    mov    ebp, esp
+ 00000054  83 C4 D8	   *	    add    esp, 0FFFFFFD8h
+				    ret
+ 00000057  C9		   *	    leave  
+ 00000058  C3		   *	    ret    00000h
+ 00000059			MySub6 endp
+8-2-8.asm(59) : warning A6004:procedure argument or local not referenced : tempArray
+
+ 00000059			Example1 proc
+				    local temp:dword
+				    ; ...
+ 00000059  55		   *	    push   ebp
+ 0000005A  8B EC	   *	    mov    ebp, esp
+ 0000005C  83 C4 FC	   *	    add    esp, 0FFFFFFFCh
+				    ret
+ 0000005F  C9		   *	    leave  
+ 00000060  C3		   *	    ret    00000h
+ 00000061			Example1 endp
+8-2-8.asm(65) : warning A6004:procedure argument or local not referenced : temp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 21:41:03
+	8-2-8.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000061 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Example1 . . . . . . . . . . . .	P Near	 00000059 _TEXT	Length= 00000008 Public STDCALL
+  temp . . . . . . . . . . . . .	DWord	 bp - 00000004
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+MySub1 . . . . . . . . . . . . .	P Near	 0000002D _TEXT	Length= 00000006 Public STDCALL
+MySub2 . . . . . . . . . . . . .	P Near	 00000033 _TEXT	Length= 00000006 Public STDCALL
+MySub3 . . . . . . . . . . . . .	P Near	 00000039 _TEXT	Length= 00000008 Public STDCALL
+  var1 . . . . . . . . . . . . .	Byte	 bp - 00000001
+MySub4 . . . . . . . . . . . . .	P Near	 00000041 _TEXT	Length= 00000008 Public STDCALL
+  temp . . . . . . . . . . . . .	DWord	 bp - 00000004
+  swapFlag . . . . . . . . . . .	Byte	 bp - 00000005
+MySub5 . . . . . . . . . . . . .	P Near	 00000049 _TEXT	Length= 00000008 Public STDCALL
+  pArray . . . . . . . . . . . .	DWord	 bp - 00000004
+MySub6 . . . . . . . . . . . . .	P Near	 00000051 _TEXT	Length= 00000008 Public STDCALL
+  tempArray  . . . . . . . . . .	DWord	 bp - 00000028
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000002D Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   6 Warnings
+	   0 Errors

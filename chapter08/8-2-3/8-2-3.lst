@@ -1,0 +1,110 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
+	8-2-3.as					     Page 1 - 1
+
+
+				title 8-2-3.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 8-2-3
+ 00000000  6A 06		    push 6
+ 00000002  6A 05		    push 5
+ 00000004  E8 0000001E		    call AddTwo1        ; AddTwo1(5, 6)
+ 00000009  83 C4 08		    add esp, 8
+
+ 0000000C  6A 04		    push 4
+ 0000000E  6A 03		    push 3
+ 00000010  E8 0000001D		    call AddTwo2        ; AddTwo2(3, 4)
+ 00000015  83 C4 08		    add esp, 8
+
+ 00000018  E8 00000020		    call Example1
+
+ 0000001D  B9 00000000		    mov ecx, 0
+ 00000022  E8 00000000 E	    call ExitProcess
+ 00000027			main endp
+
+ 00000027			AddTwo1 proc
+ 00000027  55			    push ebp
+ 00000028  8B EC		    mov ebp, esp        ; base of stack frame
+
+ 0000002A  8B 45 0C		    mov eax, [ebp + 12] ; second parameter (6)
+ 0000002D  03 45 08		    add eax, [ebp + 8]  ; first parameter (5)
+
+ 00000030  5D			    pop ebp
+ 00000031  C3			    ret
+ 00000032			AddTwo1 endp
+
+ 00000032			AddTwo2 proc
+ 00000000			.data
+ = [ebp + 12]			    y_param equ [ebp + 12]
+ = [ebp + 8]			    x_param equ [ebp + 8]
+ 00000032			.code
+ 00000032  55			    push ebp
+ 00000033  8B EC		    mov ebp, esp
+
+ 00000035  8B 45 0C		    mov eax, y_param
+ 00000038  03 45 08		    add eax, x_param
+
+ 0000003B  5D			    pop ebp
+ 0000003C  C3			    ret
+ 0000003D			AddTwo2 endp
+
+ 0000003D			Example1 proc
+ 0000003D  6A 06		    push 6
+ 0000003F  6A 05		    push 5
+ 00000041  E8 FFFFFFE1		    call AddTwo1
+ 00000046  C3			    ret             ; stack is corrupted!
+ 00000047			Example1 endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
+	8-2-3.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000047 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+AddTwo1  . . . . . . . . . . . .	P Near	 00000027 _TEXT	Length= 0000000B Public STDCALL
+AddTwo2  . . . . . . . . . . . .	P Near	 00000032 _TEXT	Length= 0000000B Public STDCALL
+Example1 . . . . . . . . . . . .	P Near	 0000003D _TEXT	Length= 0000000A Public STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000027 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+x_param  . . . . . . . . . . . .	Text   	 [ebp + 8]
+y_param  . . . . . . . . . . . .	Text   	 [ebp + 12]
+
+	   0 Warnings
+	   0 Errors

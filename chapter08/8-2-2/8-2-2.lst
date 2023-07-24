@@ -1,0 +1,182 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:42:44
+8-2-2.asm						     Page 1 - 1
+
+
+				; 8-2-2.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				DumpMem proto
+				RandomRange proto
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 00010000		    array1 dword 00010000h, 00020000h, 00030000h
+	   00020000
+	   00030000
+
+ 00000000			.code
+ 00000000			main proc
+				; 8-2-2
+				    ; stack parameters
+ 00000000  BB 11111111		    mov ebx, 11111111h
+ 00000005  B9 22222222		    mov ecx, 22222222h
+ 0000000A  BE 33333333		    mov esi, 33333333h
+				                                ; save register values
+ 0000000F  53			    push ebx                    ; callee-saved (non-volatile), no need to save
+ 00000010  51			    push ecx                    ; caller-saved (volatile) register, need to save
+ 00000011  56			    push esi                    ; callee-saved (non-volatile), no need to save
+
+ 00000012  BE 00000000 R	    mov esi, offset array1      ; starting offset
+ 00000017  B9 00000003		    mov ecx, lengthof array1    ; size, in units
+ 0000001C  BB 00000004		    mov ebx, type array1        ; doubleword format
+ 00000021  E8 00000000 E	    call DumpMem                ; display memory
+
+ 00000026  5E			    pop esi                     ; restore register values
+ 00000027  59			    pop ecx
+ 00000028  5B			    pop ebx
+
+				    ; passing by value
+ 0000000C			.data
+ 0000000C 00000005		    val1 dword 5
+ 00000010 00000006		    val2 dword 6
+ 00000029			.code
+ 00000029  FF 35 00000010 R	    push val2
+ 0000002F  FF 35 0000000C R	    push val1
+ 00000035  E8 0000003F		    call AddTwo     ; EAX = Bh = 11d
+ 0000003A  83 C4 08		    add esp, 8
+
+				    ; passing by reference
+ 0000003D  68 00000010 R	    push offset val2
+ 00000042  68 0000000C R	    push offset val1
+ 00000047  E8 00000038		    call Swap       ; val1 = 6d, val2 = 5d
+ 0000004C  83 C4 08		    add esp, 8
+
+				    ; passing arrays
+ 00000014			.data
+ 00000014  00000032 [		    array2 dword 50 dup(0)
+	    00000000
+	   ]
+ 0000004F			.code
+ 0000004F  68 00000014 R	    push offset array2
+ 00000054  6A 32		    push lengthof array2
+ 00000056  E8 00000038		    call ArrayFill
+
+ 0000005B  BE 00000014 R	    mov esi, offset array2
+ 00000060  B9 00000032		    mov ecx, lengthof array2
+ 00000065  BB 00000004		    mov ebx, type array2
+ 0000006A  E8 00000000 E	    call DumpMem
+
+ 0000006F  B9 00000000		    mov ecx, 0
+ 00000074  E8 00000000 E	    call ExitProcess
+ 00000079			main endp
+
+				; ------------------------------------------------------------------------------
+ 00000079			AddTwo proc
+				; Adds two integers, return sum in EAX. (cdecl convention)
+				; ------------------------------------------------------------------------------
+ 00000079  55			    push ebp
+ 0000007A  8B EC		    mov ebp, esp        ; base of stack frame
+
+ 0000007C  8B 45 0C		    mov eax, [ebp + 12] ; second parameter
+ 0000007F  03 45 08		    add eax, [ebp + 8]  ; first parameter
+
+ 00000082  5D			    pop ebp
+ 00000083  C3			    ret                 ; caller cleans up the arguments from the stack
+ 00000084			AddTwo endp
+
+				; ------------------------------------------------------------------------------
+ 00000084			Swap proc
+				; Exchange the values of two 32-bit integers. (cdecl convention)
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ 00000084  8B 74 24 04		    mov esi, [esp + 4]  ; pointer to first integer
+ 00000088  8B 7C 24 08		    mov edi, [esp + 8]  ; pointer to second integer
+				    
+ 0000008C  8B 06		    mov eax, [esi]      ; get first integer
+ 0000008E  87 07		    xchg eax, [edi]     ; exchange with second
+ 00000090  89 06		    mov [esi], eax      ; replace first integer
+
+ 00000092  C3			    ret                 ; caller cleans up the arguments from the stack
+ 00000093			Swap endp
+
+				; ------------------------------------------------------------------------------
+ 00000093			ArrayFill proc
+				; Fills an array with 32-bit random integers. (stdcall convention)
+				; ------------------------------------------------------------------------------
+ 00000093  55			    push ebp
+ 00000094  8B EC		    mov ebp, esp
+
+ 00000096  60			    pushad              ; save registers
+
+ 00000097  8B 75 0C		    mov esi, [ebp + 12] ; offset of array
+ 0000009A  8B 4D 08		    mov ecx, [ebp + 8]  ; array length
+ 0000009D  83 F9 00		    cmp ecx, 0          ; ECX == 0?
+ 000000A0  74 11		    je L2               ; yes: skip over loop
+ 000000A2			L1:
+ 000000A2  B8 FFFFFFFF		    mov eax, 0FFFFFFFFh ; get random 0 - FFFFFFFEh
+ 000000A7  E8 00000000 E	    call RandomRange    ; from the link library
+ 000000AC  89 06		    mov [esi], eax      ; insert value in array
+ 000000AE  83 C6 04		    add esi, type dword ; move to next element
+ 000000B1  E2 EF		    loop L1
+ 000000B3			L2:
+ 000000B3  61			    popad               ; restore registers
+
+ 000000B4  5D			    pop ebp
+ 000000B5  C2 0008		    ret 8               ; callee cleans up the arguments from the stack
+ 000000B8			ArrayFill endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:42:44
+8-2-2.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000DC DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000B8 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+AddTwo . . . . . . . . . . . . .	P Near	 00000079 _TEXT	Length= 0000000B Public STDCALL
+ArrayFill  . . . . . . . . . . .	P Near	 00000093 _TEXT	Length= 00000025 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 000000A2 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 000000B3 _TEXT	
+DumpMem  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+RandomRange  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Swap . . . . . . . . . . . . . .	P Near	 00000084 _TEXT	Length= 0000000F Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000079 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array1 . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+array2 . . . . . . . . . . . . .	DWord	 00000014 _DATA	
+val1 . . . . . . . . . . . . . .	DWord	 0000000C _DATA	
+val2 . . . . . . . . . . . . . .	DWord	 00000010 _DATA	
+
+	   0 Warnings
+	   0 Errors

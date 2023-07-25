@@ -1,0 +1,177 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 17:25:41
+	8-4-3.as					     Page 1 - 1
+
+
+				title 8-4-3.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 10 20 30		    barray byte  10h, 20h, 30h
+ 00000003 00010000		    darray dword 10000h, 20000h, 30000h
+	   00020000
+	   00030000
+ 00000000			.code
+ 00000000			main proc
+ 00000000  6A 02		    push 2
+ 00000002  6A 01		    push 1
+ 00000004  E8 00000042		    call AddTwo
+
+ 00000009  68 00000000 R	    push offset barray
+ 0000000E  E8 00000045		    call FillArray
+
+ 00000013  68 00000007 R	    push offset darray + 4
+ 00000018  68 00000003 R	    push offset darray
+ 0000001D  E8 0000003D		    call Swap
+
+ 00000022  68 00000000 R	    push offset barray
+ 00000027  E8 0000003A		    call Read_File
+
+ 0000002C  6A 02		    push 2
+ 0000002E  6A 01		    push 1
+ 00000030  E8 00000045		    call Example1
+ 00000035  83 C4 08		    add esp, 8
+
+ 00000038  6A 04		    push 4
+ 0000003A  6A 03		    push 3
+ 0000003C  E8 0000003E		    call Example2
+
+ 00000041  B9 00000000		    mov ecx, 0
+ 00000046  E8 00000000 E	    call ExitProcess
+ 0000004B			main endp
+
+ 0000004B			AddTwo proc,
+				    val1: dword,
+				    val2: dword
+ 0000004B  55		   *	    push   ebp
+ 0000004C  8B EC	   *	    mov    ebp, esp
+ 0000004E  8B 45 08		    mov eax, val1
+ 00000051  03 45 0C		    add eax, val2
+				    ret
+ 00000054  C9		   *	    leave  
+ 00000055  C2 0008	   *	    ret    00008h
+ 00000058			AddTwo endp
+
+ 00000058			FillArray proc, pArray: ptr byte
+				    ; ...
+ 00000058  55		   *	    push   ebp
+ 00000059  8B EC	   *	    mov    ebp, esp
+				    ret
+ 0000005B  C9		   *	    leave  
+ 0000005C  C2 0004	   *	    ret    00004h
+ 0000005F			FillArray endp
+8-4-3.asm(52) : warning A6004:procedure argument or local not referenced : pArray
+
+ 0000005F			Swap proc pValX: ptr dword, pValY: ptr dword
+				    ; ...
+ 0000005F  55		   *	    push   ebp
+ 00000060  8B EC	   *	    mov    ebp, esp
+				    ret
+ 00000062  C9		   *	    leave  
+ 00000063  C2 0008	   *	    ret    00008h
+ 00000066			Swap endp
+8-4-3.asm(57) : warning A6004:procedure argument or local not referenced : pValX
+8-4-3.asm(57) : warning A6004:procedure argument or local not referenced : pValY
+
+ 00000066			Read_File proc uses eax ebx,
+				    pBuffer: ptr byte
+				    local fileHandle:dword
+
+ 00000066  55		   *	    push   ebp
+ 00000067  8B EC	   *	    mov    ebp, esp
+ 00000069  83 C4 FC	   *	    add    esp, 0FFFFFFFCh
+ 0000006C  50		   *	    push   eax
+ 0000006D  53		   *	    push   ebx
+ 0000006E  8B 75 08		    mov esi, pBuffer
+ 00000071  89 45 FC		    mov fileHandle, eax
+				    ret
+ 00000074  5B		   *	    pop    ebx
+ 00000075  58		   *	    pop    eax
+ 00000076  C9		   *	    leave  
+ 00000077  C2 0004	   *	    ret    00004h
+ 0000007A			Read_File endp
+
+ 0000007A			Example1 proc c param1: dword, param2: dword
+ 0000007A  55		   *	    push   ebp
+ 0000007B  8B EC	   *	    mov    ebp, esp
+				    ret
+ 0000007D  C9		   *	    leave  
+ 0000007E  C3		   *	    ret    00000h
+ 0000007F			Example1 endp
+8-4-3.asm(70) : warning A6004:procedure argument or local not referenced : param1
+8-4-3.asm(70) : warning A6004:procedure argument or local not referenced : param2
+
+ 0000007F			Example2 proc stdcall param1: dword, param2: dword
+ 0000007F  55		   *	    push   ebp
+ 00000080  8B EC	   *	    mov    ebp, esp
+				    ret
+ 00000082  C9		   *	    leave  
+ 00000083  C2 0008	   *	    ret    00008h
+ 00000086			Example2 endp
+8-4-3.asm(74) : warning A6004:procedure argument or local not referenced : param1
+8-4-3.asm(74) : warning A6004:procedure argument or local not referenced : param2
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 17:25:41
+	8-4-3.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000000F DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000086 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+AddTwo . . . . . . . . . . . . .	P Near	 0000004B _TEXT	Length= 0000000D Public STDCALL
+  val1 . . . . . . . . . . . . .	DWord	 bp + 00000008
+  val2 . . . . . . . . . . . . .	DWord	 bp + 0000000C
+Example1 . . . . . . . . . . . .	P Near	 0000007A _TEXT	Length= 00000005 Public C
+  param1 . . . . . . . . . . . .	DWord	 bp + 00000008
+  param2 . . . . . . . . . . . .	DWord	 bp + 0000000C
+Example2 . . . . . . . . . . . .	P Near	 0000007F _TEXT	Length= 00000007 Public STDCALL
+  param1 . . . . . . . . . . . .	DWord	 bp + 00000008
+  param2 . . . . . . . . . . . .	DWord	 bp + 0000000C
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+FillArray  . . . . . . . . . . .	P Near	 00000058 _TEXT	Length= 00000007 Public STDCALL
+  pArray . . . . . . . . . . . .	DWord	 bp + 00000008
+Read_File  . . . . . . . . . . .	P Near	 00000066 _TEXT	Length= 00000014 Public STDCALL
+  pBuffer  . . . . . . . . . . .	DWord	 bp + 00000008
+  fileHandle . . . . . . . . . .	DWord	 bp - 00000004
+Swap . . . . . . . . . . . . . .	P Near	 0000005F _TEXT	Length= 00000007 Public STDCALL
+  pValX  . . . . . . . . . . . .	DWord	 bp + 00000008
+  pValY  . . . . . . . . . . . .	DWord	 bp + 0000000C
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000004B Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+barray . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+darray . . . . . . . . . . . . .	DWord	 00000003 _DATA	
+
+	   7 Warnings
+	   0 Errors

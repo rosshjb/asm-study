@@ -1,0 +1,80 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 00:22:17
+Endless Recursion (endless.asm				     Page 1 - 1
+
+
+				title Endless Recursion (endless.asm)
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				WriteString proto
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.data
+ 00000000 54 68 69 73 20	    endlessStr byte "This recursion never stops", 0
+	   72 65 63 75 72
+	   73 69 6F 6E 20
+	   6E 65 76 65 72
+	   20 73 74 6F 70
+	   73 00
+ 00000000			.code
+ 00000000			main proc
+ 00000000  E8 0000000A		    call Endless
+
+ 00000005  B9 00000000		    mov ecx, 0
+ 0000000A  E8 00000000 E	    call ExitProcess
+ 0000000F			main endp
+
+ 0000000F			Endless proc
+ 0000000F  BA 00000000 R	    mov edx, offset endlessStr
+ 00000014  E8 00000000 E	    call WriteString
+
+ 00000019  E8 FFFFFFF1		    call Endless
+ 0000001E  C3			    ret                 ; never executes
+ 0000001F			Endless endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 00:22:17
+Endless Recursion (endless.asm				     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000001B DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000001F DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Endless  . . . . . . . . . . . .	P Near	 0000000F _TEXT	Length= 00000010 Public STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000000F Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+endlessStr . . . . . . . . . . .	Byte	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

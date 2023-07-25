@@ -1,0 +1,90 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 00:48:42
+"Sum of Integers (recursivesum.asm			     Page 1 - 1
+
+
+				title Sum of Integers (recursivesum.asm)
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				WriteDec proto
+				Crlf proto
+				WaitMsg proto
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B9 00000005		    mov ecx, 5                  ; counter = 5
+ 00000005  B8 00000000		    mov eax, 0                  ; holds the sum
+ 0000000A  E8 00000019		    call CalcSum                ; calculate sum
+ 0000000F  E8 00000000 E	L1: call WriteDec               ; display EAX
+ 00000014  E8 00000000 E	    call Crlf                   ; new line
+ 00000019  E8 00000000 E	    call WaitMsg
+
+ 0000001E  B9 00000000		    mov ecx, 0
+ 00000023  E8 00000000 E	    call ExitProcess
+ 00000028			main endp
+
+				; ------------------------------------------------------------------------------
+ 00000028			CalcSum proc
+				; Calculates the sum of a list of integers
+				; Receives: ECX = count
+				; Returns: EAX = sum
+				; ------------------------------------------------------------------------------
+ 00000028  83 F9 00		    cmp ecx, 0                  ; check counter value
+ 0000002B  74 08		    jz L2                       ; quit if zero
+ 0000002D  03 C1		    add eax, ecx                ; otherwise, add to sum
+ 0000002F  49			    dec ecx                     ; decrement counter
+ 00000030  E8 FFFFFFF3		    call CalcSum                ; recursive call
+ 00000035			L2:
+ 00000035  C3			    ret
+ 00000036			CalcSum endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 00:48:42
+"Sum of Integers (recursivesum.asm			     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000036 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+CalcSum  . . . . . . . . . . . .	P Near	 00000028 _TEXT	Length= 0000000E Public STDCALL
+  L2 . . . . . . . . . . . . . .	L Near	 00000035 _TEXT	
+Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteDec . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000028 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000000F _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

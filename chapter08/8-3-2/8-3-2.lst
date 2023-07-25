@@ -1,0 +1,102 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 01:02:49
+"Calculating a Factorial (fact.asm			     Page 1 - 1
+
+
+				title Calculating a Factorial (fact.asm)
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				WriteDec proto
+				Crlf proto
+				WaitMsg proto
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  6A 05		    push 5                  ; calc 5!
+ 00000002  E8 00000019		    call Factorial          ; calculate factorial (EAX)
+ 00000007  E8 00000000 E	    call WriteDec           ; display it
+ 0000000C  E8 00000000 E	    call Crlf
+ 00000011  E8 00000000 E	    call WaitMsg
+
+ 00000016  B9 00000000		    mov ecx, 0
+ 0000001B  E8 00000000 E	    call ExitProcess
+ 00000020			main endp
+
+				; ------------------------------------------------------------------------------
+ 00000020			Factorial proc
+				; Calculates a factorial.
+				; Receives: [ebp + 8] = n, the number to calculate
+				; Returns: eax = the factorial of n
+				; ------------------------------------------------------------------------------
+ 00000020  55			    push ebp
+ 00000021  8B EC		    mov ebp, esp
+
+ 00000023  8B 45 08		    mov eax, [ebp + 8]      ; get n
+ 00000026  83 F8 00		    cmp eax, 0              ; n > 0?
+ 00000029  77 07		    ja L1                   ; yes: continue
+ 0000002B  B8 00000001		    mov eax, 1              ; no: return 1 as the value of 0!
+ 00000030  EB 0C		    jmp L2                  ;     and return to the caller
+ 00000032  48			L1: dec eax
+ 00000033  50			    push eax
+ 00000034  E8 FFFFFFE7		    call Factorial          ; Factorial(n-1)
+
+				    ; Instructions from this point on execute when each recursive call returns.
+ 00000039			ReturnFact:
+ 00000039  8B 5D 08		    mov ebx, [ebp + 8]      ; get n
+ 0000003C  F7 E3		    mul ebx                 ; EDX:EAX = EAX * EBX
+ 0000003E			L2:
+ 0000003E  5D			    pop ebp
+ 0000003F  C2 0004		    ret 4
+ 00000042			Factorial endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 01:02:49
+"Calculating a Factorial (fact.asm			     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000042 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Factorial  . . . . . . . . . . .	P Near	 00000020 _TEXT	Length= 00000022 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000032 _TEXT	
+  ReturnFact . . . . . . . . . .	L Near	 00000039 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000003E _TEXT	
+WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteDec . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000020 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

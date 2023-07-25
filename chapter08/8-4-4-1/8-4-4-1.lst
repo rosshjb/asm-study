@@ -1,0 +1,148 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 21:59:30
+8-4-4-1.as						     Page 1 - 1
+
+
+				title 8-4-4-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+				MySub1 proto                    ; procedure1 prototype
+
+				ArraySum proto,                 ; procedure3 prototype
+				    ptrArray:ptr dword,
+				    szArray:dword
+
+				Example1 proto C,               ; procedure4 prototype
+				    parm1:dword, parm2:dword
+
+ 00000000			.code
+ 00000000			MySub2 proc                     ; procedure2 definition
+ 00000000  C3			    ret
+ 00000001			MySub2 endp
+
+ 00000000			.data
+ 00000000 00000100		    array dword 100h, 200h, 300h
+	   00000200
+	   00000300
+ 00000001			.code
+ 00000001			main proc
+				    invoke MySub1               ; procedure1 call
+ 00000001  E8 00000027	   *	    call   MySub1
+				    invoke MySub2               ; procedure2 call
+ 00000006  E8 FFFFFFF5	   *	    call   MySub2
+
+				    invoke ArraySum,            ; procedure3 call
+				        offset array,
+				        lengthof array
+ 0000000B  6A 03	   *	    push   +000000003h
+ 0000000D  68 00000000 R   *	    push   dword  ptr OFFSET FLAT: array
+ 00000012  E8 00000017	   *	    call   ArraySum
+
+				    invoke Example1, 4, 5       ; procedure4 call
+ 00000017  6A 05	   *	    push   +000000005h
+ 00000019  6A 04	   *	    push   +000000004h
+ 0000001B  E8 00000030	   *	    call   Example1
+ 00000020  83 C4 08	   *	    add    esp, 000000008h
+
+ 00000023  B9 00000000		    mov ecx, 0
+ 00000028  E8 00000000 E	    call ExitProcess
+ 0000002D			main endp
+
+				; ------------------------------------------------------------------------------
+ 0000002D			MySub1 proc                     ; procedure1 definition
+				; ------------------------------------------------------------------------------
+ 0000002D  C3			    ret
+ 0000002E			MySub1 endp
+
+				; ------------------------------------------------------------------------------
+ 0000002E			ArraySum proc uses esi ecx,     ; procedure3 definition
+				    ptrArray:ptr dword,         ; points to the array
+				    szArray:dword               ; array size
+				; ------------------------------------------------------------------------------
+ 0000002E  55		   *	    push   ebp
+ 0000002F  8B EC	   *	    mov    ebp, esp
+ 00000031  56		   *	    push   esi
+ 00000032  51		   *	    push   ecx
+ 00000033  B8 00000000		    mov eax, 0
+ 00000038  8B 75 08		    mov esi, ptrArray
+ 0000003B  8B 4D 0C		    mov ecx, szArray
+ 0000003E  83 F9 00		L1: cmp ecx, 0
+ 00000041  74 07		    je L2
+ 00000043  03 06		    add eax, [esi]
+ 00000045  83 C6 04		    add esi, type dword
+ 00000048  E2 F4		    loop L1
+ 0000004A			L2:
+ 0000004A  59		   *	    pop    ecx
+ 0000004B  5E		   *	    pop    esi
+ 0000004C  C9		   *	    leave  
+ 0000004D  C2 0008		    ret 8
+ 00000050			ArraySum endp
+
+				; ------------------------------------------------------------------------------
+ 00000050			Example1 proc C parm1:dword, parm2:dword    ; procedure4 definition
+				; ------------------------------------------------------------------------------
+ 00000050  55		   *	    push   ebp
+ 00000051  8B EC	   *	    mov    ebp, esp
+ 00000053  8B 45 08		    mov eax, parm1
+ 00000056  03 45 0C		    add eax, parm2
+				    ret
+ 00000059  C9		   *	    leave  
+ 0000005A  C3		   *	    ret    00000h
+ 0000005B			Example1 endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 21:59:30
+8-4-4-1.as						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000000C DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000005B DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArraySum . . . . . . . . . . . .	P Near	 0000002E _TEXT	Length= 00000022 Public STDCALL
+  ptrArray . . . . . . . . . . .	DWord	 bp + 00000008
+  szArray  . . . . . . . . . . .	DWord	 bp + 0000000C
+  L1 . . . . . . . . . . . . . .	L Near	 0000003E _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000004A _TEXT	
+Example1 . . . . . . . . . . . .	P Near	 00000050 _TEXT	Length= 0000000B Public C
+  parm1  . . . . . . . . . . . .	DWord	 bp + 00000008
+  parm2  . . . . . . . . . . . .	DWord	 bp + 0000000C
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+MySub1 . . . . . . . . . . . . .	P Near	 0000002D _TEXT	Length= 00000001 Public STDCALL
+MySub2 . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000001 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000001 _TEXT	Length= 0000002C Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array  . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

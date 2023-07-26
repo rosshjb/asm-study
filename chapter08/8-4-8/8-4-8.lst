@@ -1,0 +1,138 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/26/23 19:09:08
+	8-4-8.as					     Page 1 - 1
+
+
+				title 8-4-8.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+				myProc proto, x:dword, y:dword
+				WriteStackFrame proto, numParam:dword, numLocalVal:dword, numSavedReg:dword
+				WriteStackFrameName proto, numParam:dword, numLocalVal:dword,
+				    numSavedReg:dword, procName:ptr byte
+				Crlf proto
+				WaitMsg proto
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  B8 EAEAEAEA		    mov eax, 0EAEAEAEAh
+ 00000005  BB EBEBEBEB		    mov ebx, 0EBEBEBEBh
+
+				    invoke myProc, 1111h, 2222h     ; pass two integers arguments
+ 0000000A  68 00002222	   *	    push   +000002222h
+ 0000000F  68 00001111	   *	    push   +000001111h
+ 00000014  E8 0000000A	   *	    call   myProc
+
+ 00000019  B9 00000000		    mov ecx, 0
+ 0000001E  E8 00000000 E	    call ExitProcess
+ 00000023			main endp
+
+ 00000023			myProc proc uses eax ebx,
+				    x:dword, y:dword
+				    local a:dword, b:dword
+ 00000023  55		   *	    push   ebp
+ 00000024  8B EC	   *	    mov    ebp, esp
+ 00000026  83 C4 F8	   *	    add    esp, 0FFFFFFF8h
+ 00000029  50		   *	    push   eax
+ 0000002A  53		   *	    push   ebx
+ 00000000			.data
+ = 00000002			    params = 2
+ = 00000002			    locals = 2
+ = 00000002			    saved_regs = 2
+ 00000000 6D 79 50 72 6F	    procName byte "myProc", 0
+	   63 00
+ 0000002B			.code
+ 0000002B  C7 45 FC		    mov a, 0AAAAh
+	   0000AAAA
+ 00000032  C7 45 F8		    mov b, 0BBBBh
+	   0000BBBB
+
+				    invoke WriteStackFrame,
+				        params,                     ; number of passed parameters
+				        locals,                     ; number of local variables
+				        saved_regs                  ; number of saved registers
+ 00000039  6A 02	   *	    push   +000000002h
+ 0000003B  6A 02	   *	    push   +000000002h
+ 0000003D  6A 02	   *	    push   +000000002h
+ 0000003F  E8 00000000 E   *	    call   WriteStackFrame
+ 00000044  E8 00000000 E	    call Crlf
+
+				    invoke WriteStackFrameName,
+				        params,                     ; number of passed parameters
+				        locals,                     ; number of local variables
+				        saved_regs,                 ; number of saved registers
+				        addr procName               ; null-terminated string
+ 00000049  68 00000000 R   *	    push   OFFSET procName
+ 0000004E  6A 02	   *	    push   +000000002h
+ 00000050  6A 02	   *	    push   +000000002h
+ 00000052  6A 02	   *	    push   +000000002h
+ 00000054  E8 00000000 E   *	    call   WriteStackFrameName
+ 00000059  E8 00000000 E	    call Crlf
+
+ 0000005E  E8 00000000 E	    call WaitMsg
+				    ret
+ 00000063  5B		   *	    pop    ebx
+ 00000064  58		   *	    pop    eax
+ 00000065  C9		   *	    leave  
+ 00000066  C2 0008	   *	    ret    00008h
+ 00000069			myProc endp
+8-4-8.asm(53) : warning A6004:procedure argument or local not referenced : x
+8-4-8.asm(53) : warning A6004:procedure argument or local not referenced : y
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/26/23 19:09:08
+	8-4-8.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000007 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000069 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteStackFrameName  . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000023 Public STDCALL
+myProc . . . . . . . . . . . . .	P Near	 00000023 _TEXT	Length= 00000046 Public STDCALL
+  x  . . . . . . . . . . . . . .	DWord	 bp + 00000008
+  y  . . . . . . . . . . . . . .	DWord	 bp + 0000000C
+  a  . . . . . . . . . . . . . .	DWord	 bp - 00000004
+  b  . . . . . . . . . . . . . .	DWord	 bp - 00000008
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+locals . . . . . . . . . . . . .	Number	 00000002h   
+params . . . . . . . . . . . . .	Number	 00000002h   
+procName . . . . . . . . . . . .	Byte	 00000000 _DATA	
+saved_regs . . . . . . . . . . .	Number	 00000002h   
+
+	   2 Warnings
+	   0 Errors

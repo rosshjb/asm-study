@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 22:30:41
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 8-4-4-2.as						     Page 1 - 1
 
 
@@ -8,7 +8,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 22:30:41
 				.model flat, stdcall
 				.stack 4096
 
-				Sub1 proto p1:byte, p2:word, p3:ptr dword
+				Sub1 proto p1:byte, p2:word, p3:ptr byte
 				ExitProcess proto, dwExitCode:dword
 
  00000000			.data
@@ -18,7 +18,14 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 22:30:41
  00000005 12345678		    dword_1 dword 12345678h
  00000000			.code
  00000000			main proc
-				    ; invoke Sub1, byte_1, word_1, addr byte_1
+				    invoke Sub1, byte_1, word_1, addr byte_1
+ 00000000  68 00000000 R   *	    push   OFFSET byte_1
+ 00000005  83 EC 02	   *	    sub    esp, 002h
+ 00000008  66| FF 35
+	   00000001 R	   *	    push   word_1
+ 0000000F  A0 00000000 R   *	    mov    al, byte_1
+ 00000014  50		   *	    push   eax
+ 00000015  E8 0000003E	   *	    call   Sub1
 
 				    ; invoke Sub1, word_1, word_2, addr byte_1    ; error: type mismatch
 
@@ -27,34 +34,41 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 22:30:41
 				    ; invoke Sub1,
 				    ;     byte_1, word_2, addr byte_1, word_2     ; error: too many arguments
 
-				    ; invoke Sub1, byte_1, byte_1, addr byte_1
+				    invoke Sub1, byte_1, byte_1, addr byte_1
+ 0000001A  68 00000000 R   *	    push   OFFSET byte_1
+ 0000001F  A0 00000000 R   *	    mov    al, byte_1
+ 00000024  0F B6 C0	   *	    movzx  eax, al
+ 00000027  50		   *	    push   eax
+ 00000028  A0 00000000 R   *	    mov    al, byte_1
+ 0000002D  50		   *	    push   eax
+ 0000002E  E8 00000025	   *	    call   Sub1
 
-				    invoke Sub1, byte_1, word_1, addr dword_1        ; no error detected
- 00000000  68 00000005 R   *	    push   OFFSET dword_1
- 00000005  83 EC 02	   *	    sub    esp, 002h
- 00000008  66| FF 35
+				    invoke Sub1, byte_1, word_1, dword_1        ; no error detected
+ 00000033  FF 35 00000005 R *	    push   dword_1
+ 00000039  83 EC 02	   *	    sub    esp, 002h
+ 0000003C  66| FF 35
 	   00000001 R	   *	    push   word_1
- 0000000F  A0 00000000 R   *	    mov    al, byte_1
- 00000014  50		   *	    push   eax
- 00000015  E8 0000000A	   *	    call   Sub1
+ 00000043  A0 00000000 R   *	    mov    al, byte_1
+ 00000048  50		   *	    push   eax
+ 00000049  E8 0000000A	   *	    call   Sub1
 
- 0000001A  B9 00000000		    mov ecx, 0
- 0000001F  E8 00000000 E	    call ExitProcess
- 00000024			main endp
+ 0000004E  B9 00000000		    mov ecx, 0
+ 00000053  E8 00000000 E	    call ExitProcess
+ 00000058			main endp
 
- 00000024			Sub1 proc p1:byte, p2:word, p3:ptr dword
- 00000024  55		   *	    push   ebp
- 00000025  8B EC	   *	    mov    ebp, esp
+ 00000058			Sub1 proc p1:byte, p2:word, p3:ptr byte
+ 00000058  55		   *	    push   ebp
+ 00000059  8B EC	   *	    mov    ebp, esp
 				    ret
- 00000027  C9		   *	    leave  
- 00000028  C2 000C	   *	    ret    0000Ch
- 0000002B			Sub1 endp
+ 0000005B  C9		   *	    leave  
+ 0000005C  C2 000C	   *	    ret    0000Ch
+ 0000005F			Sub1 endp
 8-4-4-2.asm(36) : warning A6004:procedure argument or local not referenced : p1
 8-4-4-2.asm(36) : warning A6004:procedure argument or local not referenced : p2
 8-4-4-2.asm(36) : warning A6004:procedure argument or local not referenced : p3
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/25/23 22:30:41
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 8-4-4-2.as						     Symbols 2 - 1
 
 
@@ -67,7 +81,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 00000009 DWord	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000002B DWord	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000005F DWord	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -75,11 +89,11 @@ Procedures, parameters, and locals:
                 N a m e                 Type     Value    Attr
 
 ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-Sub1 . . . . . . . . . . . . . .	P Near	 00000024 _TEXT	Length= 00000007 Public STDCALL
+Sub1 . . . . . . . . . . . . . .	P Near	 00000058 _TEXT	Length= 00000007 Public STDCALL
   p1 . . . . . . . . . . . . . .	Byte	 bp + 00000008
   p2 . . . . . . . . . . . . . .	Word	 bp + 0000000C
   p3 . . . . . . . . . . . . . .	DWord	 bp + 00000010
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000024 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000058 Public STDCALL
 
 
 Symbols:

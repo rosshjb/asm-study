@@ -1,0 +1,105 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:28:49
+!Prompt for Integers (_prompt.asm			     Page 1 - 1
+
+
+				title Prompt for Integers (_prompt.asm)
+
+				option casemap:none
+
+				.386
+				.model flat, stdcall
+
+				includelib irvine32.lib
+
+				extern WriteString@0:proc, ReadInt@0:proc, Crlf@0:proc
+
+ 00000000			.code
+				; ------------------------------------------------------------------------------
+ 00000000			PromptForIntegers proc stdcall
+				; Prompts the user for an array of integers and fills the array with the user's
+				; input.
+				; Receives:
+				;   ptrPrompt:PTR BYTE ; prompt string
+				;   ptrArray:PTR DWORD ; pointer to array
+				;   arraySize:DWORD    ; size of the array
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ = [ebp + 16]			    arraySize equ [ebp + 16]
+ = [ebp + 12]			    ptrArray  equ [ebp + 12]
+ = [ebp + 8]			    ptrPrompt equ [ebp + 8]
+
+ 00000000  55			    push ebp
+ 00000001  8B EC		    mov ebp, esp
+
+ 00000003  60			    pushad                              ; save all registers
+
+ 00000004  8B 4D 10		    mov ecx, arraySize
+ 00000007  83 F9 00		    cmp ecx, 0                          ; array size <= 0?
+ 0000000A  7E 1C		    jle L2                              ; yes: quit
+ 0000000C  8B 55 08		    mov edx, ptrPrompt                  ; address of the prompt
+ 0000000F  8B 75 0C		    mov esi, ptrArray
+
+ 00000012			L1:
+ 00000012  E8 00000000 E	    call WriteString@0                  ; display string
+
+ 00000017  E8 00000000 E	    call ReadInt@0                      ; read integer into EAX
+ 0000001C  E8 00000000 E	    call Crlf@0                         ; go to next output line
+ 00000021  89 06		    mov [esi], eax                      ; store in array
+ 00000023  83 C6 04		    add esi, 4                          ; next integer
+ 00000026  E2 EA		    loop L1
+
+ 00000028			L2:
+ 00000028  61			    popad                               ; restore all registers
+
+ 00000029  8B E5		    mov esp, ebp
+ 0000002B  5D			    pop ebp
+ 0000002C  C2 000C		    ret 12                              ; restore the stack
+ 0000002F			PromptForIntegers endp
+
+				end
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:28:49
+!Prompt for Integers (_prompt.asm			     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000002F DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+PromptForIntegers  . . . . . . .	P Near	 00000000 _TEXT	Length= 0000002F Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000012 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000028 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+Crlf@0 . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+ReadInt@0  . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+WriteString@0  . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+arraySize  . . . . . . . . . . .	Text   	 [ebp + 16]
+ptrArray . . . . . . . . . . . .	Text   	 [ebp + 12]
+ptrPrompt  . . . . . . . . . . .	Text   	 [ebp + 8]
+
+	   0 Warnings
+	   0 Errors

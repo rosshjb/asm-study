@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/26/23 01:31:36
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:27
 !Swap Procedure Example (swap.asm			     Page 1 - 1
 
 
@@ -69,7 +69,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/26/23 01:31:36
  00000050			Swap endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/26/23 01:31:36
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:27
 !Swap Procedure Example (swap.asm			     Symbols 2 - 1
 
 

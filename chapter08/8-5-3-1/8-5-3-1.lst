@@ -1,26 +1,23 @@
 Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:27
-sub1.as						     Page 1 - 1
+vars.as						     Page 1 - 1
 
 
-				title sub1.asm
+				title vars.asm
 				option casemap:none
 
 				.386
 				.model flat, stdcall
 
- 00000000			.code
- 00000000			sub1 proc
- 00000000  E8 00000001		    call mySub
- 00000005  C3			    ret
- 00000006			sub1 endp
+				public count, SYM1
 
- 00000006			mySub proc private
- 00000006  C3			    ret
- 00000007			mySub endp
+ = 0000000A			SYM1 = 10
+
+ 00000000			.data
+ 00000000 00000000		    count dword 0
 
 				end
 Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:27
-sub1.as						     Symbols 2 - 1
+vars.as						     Symbols 2 - 1
 
 
 
@@ -30,16 +27,8 @@ Segments and Groups:
                 N a m e                 Size     Length   Align   Combine Class
 
 FLAT . . . . . . . . . . . . . .	GROUP
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000007 DWord	  Public  'CODE'	
-
-
-Procedures, parameters, and locals:
-
-                N a m e                 Type     Value    Attr
-
-mySub  . . . . . . . . . . . . .	P Near	 00000006 _TEXT	Length= 00000001 Private STDCALL
-sub1 . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000006 Public STDCALL
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000004 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'CODE'	
 
 
 Symbols:
@@ -55,6 +44,8 @@ Symbols:
 @fardata?  . . . . . . . . . . .	Text   	 FLAT
 @fardata . . . . . . . . . . . .	Text   	 FLAT
 @stack . . . . . . . . . . . . .	Text   	 FLAT
+SYM1 . . . . . . . . . . . . . .	Number	 0000000Ah   Public
+count  . . . . . . . . . . . . .	DWord	 00000000 _DATA	Public STDCALL
 
 	   0 Warnings
 	   0 Errors

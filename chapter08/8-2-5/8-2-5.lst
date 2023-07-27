@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 	8-2-5.as					     Page 1 - 1
 
 
@@ -26,7 +26,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
  00000014  6A 64		    push count
  00000016  E8 0000005B		    call ArrayFill
 
- 0000001B  6A 2A		    push 2Ah    ; '*'
+ 0000001B  6A 2A		    push 2Ah                    ; the '*' character
  0000001D  E8 0000007A		    call makeArray
 
  00000022  B9 00000000		    mov ecx, 0
@@ -130,7 +130,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
  000000B9			makeArray endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 20:36:34
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 	8-2-5.as					     Symbols 2 - 1
 
 

@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 	8-2-3.as					     Page 1 - 1
 
 
@@ -23,7 +23,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
  00000010  E8 0000001D		    call AddTwo2        ; AddTwo2(3, 4)
  00000015  83 C4 08		    add esp, 8
 
- 00000018  E8 00000020		    call Example1
+ 00000018  E8 00000020		    call Example1       ; stack corruption example
 
  0000001D  B9 00000000		    mov ecx, 0
  00000022  E8 00000000 E	    call ExitProcess
@@ -63,7 +63,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
  00000047			Example1 endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/24/23 18:53:04
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 18:49:28
 	8-2-3.as					     Symbols 2 - 1
 
 

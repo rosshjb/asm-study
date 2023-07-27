@@ -1,0 +1,91 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:29:36
+#DisplaySum Procedure (_display.asm			     Page 1 - 1
+
+
+				title DisplaySum Procedure (_display.asm)
+
+				option casemap:none
+
+				.386
+				.model flat, stdcall
+
+				includelib irvine32.lib
+
+				extern WriteString@0:proc, WriteInt@0:proc, Crlf@0:proc
+
+ 00000000			.code
+				; ------------------------------------------------------------------------------
+ 00000000			DisplaySum proc stdcall
+				; Displays the sum on the console.
+				; Receives:
+				;   ptrPrompt   ; offset of prompt string
+				;   theSum      ; the array sum (DWORD)
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ = [ebp+12]			    theSum    equ [ebp+12]
+ = [ebp+8]			    ptrPrompt equ [ebp+8]
+
+ 00000000  55				push ebp
+ 00000001  8B EC		    mov ebp, esp
+
+ 00000003  50				push eax
+ 00000004  52				push edx
+
+ 00000005  8B 55 08			mov edx, ptrPrompt      ; pointer to prompt
+ 00000008  E8 00000000 E		call WriteString@0
+ 0000000D  8B 45 0C			mov eax, theSum
+ 00000010  E8 00000000 E		call WriteInt@0         ; display EAX
+ 00000015  E8 00000000 E		call Crlf@0
+
+ 0000001A  5A				pop	edx
+ 0000001B  58				pop	eax
+
+ 0000001C  8B E5		    mov esp, ebp
+ 0000001E  5D			    pop ebp
+ 0000001F  C2 0008			ret	8                   ; restore the stack
+ 00000022			DisplaySum endp
+
+				end
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:29:36
+#DisplaySum Procedure (_display.asm			     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000022 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+DisplaySum . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000022 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+Crlf@0 . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+WriteInt@0 . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+WriteString@0  . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+ptrPrompt  . . . . . . . . . . .	Text   	 [ebp+8]
+theSum . . . . . . . . . . . . .	Text   	 [ebp+12]
+
+	   0 Warnings
+	   0 Errors

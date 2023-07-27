@@ -135,6 +135,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <MASM Include="8-5-2.asm" />
+    <MASM Include="addtwo.asm" />
+    <MASM Include="sub1.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

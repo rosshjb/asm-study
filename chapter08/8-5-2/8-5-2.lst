@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 00:20:02
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 15:21:40
 	8-5-2.as					     Page 1 - 1
 
 
@@ -8,16 +8,30 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 00:20:02
 				.model flat, stdcall
 				.stack 4096
 
+				extern sub1@0:proc
+				extern AddTwo1@8:proc
+				AddTwo2 proto, val1:dword, val2:dword
+
 				ExitProcess proto, dwExitCode:dword
 
  00000000			.code
  00000000			main proc
- 00000000  B9 00000000		    mov ecx, 0
- 00000005  E8 00000000 E	    call ExitProcess
- 0000000A			main endp
+ 00000000  E8 00000000 E	    call sub1@0
+
+ 00000005  6A 02		    push 2
+ 00000007  6A 01		    push 1
+ 00000009  E8 00000000 E	    call AddTwo1@8
+
+ 0000000E  6A 04		    push 4
+ 00000010  6A 03		    push 3
+ 00000012  E8 00000000 E	    call AddTwo2
+
+ 00000017  B9 00000000		    mov ecx, 0
+ 0000001C  E8 00000000 E	    call ExitProcess
+ 00000021			main endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 00:20:02
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 15:21:40
 	8-5-2.as					     Symbols 2 - 1
 
 
@@ -30,15 +44,16 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000000A DWord	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000021 DWord	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
 
                 N a m e                 Type     Value    Attr
 
+AddTwo2  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000000A Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000021 Public STDCALL
 
 
 Symbols:
@@ -54,6 +69,8 @@ Symbols:
 @fardata?  . . . . . . . . . . .	Text   	 FLAT
 @fardata . . . . . . . . . . . .	Text   	 FLAT
 @stack . . . . . . . . . . . . .	Text   	 FLAT
+AddTwo1@8  . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+sub1@0 . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 
 	   0 Warnings
 	   0 Errors

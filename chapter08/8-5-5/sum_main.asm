@@ -23,6 +23,7 @@ extern ExitProcess@4:proc
 PromptForIntegers   equ PromptForIntegers@0
 ArraySum            equ ArraySum@0
 DisplaySum          equ DisplaySum@0
+Clrscr              equ Clrscr@0
 Crlf                equ Crlf@0
 WaitMsg             equ WaitMsg@0
 ExitProcess         equ ExitProcess@4
@@ -37,7 +38,7 @@ ExitProcess         equ ExitProcess@4
     sum dword ?
 .code
 main proc
-    call Clrscr@0
+    call Clrscr
 
 ; PromptForIntegers(offset prompt1, offset array, lengthof array)
     push lengthof array

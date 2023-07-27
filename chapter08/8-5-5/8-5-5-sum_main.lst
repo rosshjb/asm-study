@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:30:01
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:32:27
 (Integer Summation Program (sum_main.asm		     Page 1 - 1
 
 
@@ -27,6 +27,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:30:01
  = PromptForIntegers@0		PromptForIntegers   equ PromptForIntegers@0
  = ArraySum@0			ArraySum            equ ArraySum@0
  = DisplaySum@0			DisplaySum          equ DisplaySum@0
+ = Clrscr@0			Clrscr              equ Clrscr@0
  = Crlf@0			Crlf                equ Crlf@0
  = WaitMsg@0			WaitMsg             equ WaitMsg@0
  = ExitProcess@4		ExitProcess         equ ExitProcess@4
@@ -52,7 +53,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:30:01
  00000042 00000000		    sum dword ?
  00000000			.code
  00000000			main proc
- 00000000  E8 00000000 E	    call Clrscr@0
+ 00000000  E8 00000000 E	    call Clrscr
 
 				; PromptForIntegers(offset prompt1, offset array, lengthof array)
  00000005  6A 03		    push lengthof array
@@ -79,7 +80,7 @@ Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:30:01
  0000004B			main endp
 
 				end main
-Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:30:01
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 19:32:27
 (Integer Summation Program (sum_main.asm		     Symbols 2 - 1
 
 
@@ -120,6 +121,7 @@ ArraySum@0 . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 ArraySum . . . . . . . . . . . .	Text   	 ArraySum@0
 COUNT  . . . . . . . . . . . . .	Number	 00000003h   
 Clrscr@0 . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+Clrscr . . . . . . . . . . . . .	Text   	 Clrscr@0
 Crlf@0 . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
 Crlf . . . . . . . . . . . . . .	Text   	 Crlf@0
 DisplaySum@0 . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL

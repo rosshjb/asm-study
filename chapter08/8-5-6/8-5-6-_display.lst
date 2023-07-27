@@ -1,0 +1,113 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:21:13
+#DisplaySum Procedure (_display.asm			     Page 1 - 1
+
+
+				title DisplaySum Procedure (_display.asm)
+
+				include sum.inc
+			      C ; Include file for the ArraySum Program (sum.inc)
+			      C 
+			      C .386
+			      C .model flat, stdcall
+			      C 
+			      C option casemap:none
+			      C 
+			      C includelib irvine32.lib
+			      C 
+			      C WriteString proto
+			      C WriteInt proto
+			      C ReadInt proto
+			      C Crlf proto
+			      C Clrscr proto
+			      C ExitProcess proto, dwExitCode:dword
+			      C 
+			      C PromptForIntegers proto,
+			      C     ptrPrompt:ptr byte,     ; prompt string
+			      C     ptrArray:ptr dword,     ; points to the array
+			      C     arraySize:dword         ; size of the array
+			      C 
+			      C ArraySum proto,
+			      C     ptrArray:ptr dword,     ; points to the array
+			      C     count:dword             ; size of the array
+			      C 
+			      C DisplaySum PROTO,
+			      C     ptrPrompt:ptr byte,     ; prompt string
+			      C     theSum:dword            ; sum of the array
+			      C 
+
+ 00000000			.code
+				; ------------------------------------------------------------------------------
+ 00000000			DisplaySum proc,
+				    ptrPrompt:ptr byte, ; prompt string
+				    theSum:dword        ; the array sum
+				;
+				; displays the sum on the console.
+				; returns:  nothing
+				; ------------------------------------------------------------------------------
+ 00000000  55		   *	    push   ebp
+ 00000001  8B EC	   *	    mov    ebp, esp
+ 00000003  50			    push eax
+ 00000004  52			    push edx
+
+ 00000005  8B 55 08		    mov edx, ptrPrompt  ; pointer to prompt
+ 00000008  E8 00000000 E	    call WriteString
+ 0000000D  8B 45 0C		    mov eax, theSum
+ 00000010  E8 00000000 E	    call WriteInt       ; display eax
+ 00000015  E8 00000000 E	    call Crlf
+				    
+ 0000001A  5A			    pop edx
+ 0000001B  58			    pop eax
+				    ret
+ 0000001C  C9		   *	    leave  
+ 0000001D  C2 0008	   *	    ret    00008h
+ 00000020			DisplaySum endp
+
+				end
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:21:13
+#DisplaySum Procedure (_display.asm			     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000020 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArraySum . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Clrscr . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+DisplaySum . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000020 Public STDCALL
+  ptrPrompt  . . . . . . . . . .	DWord	 bp + 00000008
+  theSum . . . . . . . . . . . .	DWord	 bp + 0000000C
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+PromptForIntegers  . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteInt . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   0 Errors

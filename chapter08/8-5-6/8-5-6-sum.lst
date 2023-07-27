@@ -1,0 +1,61 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:02:57
+sum.inc							     Page 1 - 1
+
+
+				; Include file for the ArraySum Program (sum.inc)
+
+				.386
+				.model flat, stdcall
+
+				PromptForIntegers proto,
+				    ptrPrompt:ptr byte,     ; prompt string
+				    ptrArray:ptr dword,     ; points to the array
+				    arraySize:dword         ; size of the array
+
+				ArraySum proto,
+				    ptrArray:ptr dword,     ; points to the array
+				    count:dword             ; size of the array
+
+				DisplaySum PROTO,
+				    ptrPrompt:ptr byte,     ; prompt string
+				    theSum:dword            ; sum of the array
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:02:57
+sum.inc							     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000000 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArraySum . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+DisplaySum . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+PromptForIntegers  . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+
+	   0 Warnings
+	   1 Errors

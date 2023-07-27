@@ -1,0 +1,151 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:21:27
+(Integer Summation Program (sum_main.asm		     Page 1 - 1
+
+
+				title Integer Summation Program (sum_main.asm)
+
+				; Multimodule example: (main module)
+				; This program inputs multiple integers from the user,
+				; stores them in an array, calculates the sum of the
+				; array, and displays the sum.
+
+				include sum.inc
+			      C ; Include file for the ArraySum Program (sum.inc)
+			      C 
+			      C .386
+			      C .model flat, stdcall
+			      C 
+			      C option casemap:none
+			      C 
+			      C includelib irvine32.lib
+			      C 
+			      C WriteString proto
+			      C WriteInt proto
+			      C ReadInt proto
+			      C Crlf proto
+			      C Clrscr proto
+			      C WaitMsg proto
+			      C ExitProcess proto, dwExitCode:dword
+			      C 
+			      C PromptForIntegers proto,
+			      C     ptrPrompt:ptr byte,     ; prompt string
+			      C     ptrArray:ptr dword,     ; points to the array
+			      C     arraySize:dword         ; size of the array
+			      C 
+			      C ArraySum proto,
+			      C     ptrArray:ptr dword,     ; points to the array
+			      C     count:dword             ; size of the array
+			      C 
+			      C DisplaySum PROTO,
+			      C     ptrPrompt:ptr byte,     ; prompt string
+			      C     theSum:dword            ; sum of the array
+			      C 
+
+ = 00000003			COUNT = 3
+
+ 00000000			.data
+ 00000000 45 6E 74 65 72	    prompt1 BYTE  "Enter a signed integer: ", 0
+	   20 61 20 73 69
+	   67 6E 65 64 20
+	   69 6E 74 65 67
+	   65 72 3A 20 00
+ 00000019 54 68 65 20 73	    prompt2 BYTE  "The sum of the integers is: ", 0
+	   75 6D 20 6F 66
+	   20 74 68 65 20
+	   69 6E 74 65 67
+	   65 72 73 20 69
+	   73 3A 20 00
+ 00000036  00000003 [		    array   DWORD COUNT dup(?)
+	    00000000
+	   ]
+ 00000042 00000000		    sum     DWORD ?
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  E8 00000000 E	    call Clrscr
+				    
+				    invoke PromptForIntegers, 
+				        addr prompt1, 
+				        addr array, 
+				        COUNT
+ 00000005  6A 03	   *	    push   +000000003h
+ 00000007  68 00000036 R   *	    push   OFFSET array
+ 0000000C  68 00000000 R   *	    push   OFFSET prompt1
+ 00000011  E8 00000000 E   *	    call   PromptForIntegers
+
+				    invoke ArraySum, 
+				        addr array, 
+				        COUNT
+ 00000016  6A 03	   *	    push   +000000003h
+ 00000018  68 00000036 R   *	    push   OFFSET array
+ 0000001D  E8 00000000 E   *	    call   ArraySum
+ 00000022  A3 00000042 R	    mov	sum, eax
+
+				    invoke DisplaySum, 
+				        addr prompt2, 
+				        sum
+ 00000027  FF 35 00000042 R *	    push   sum
+ 0000002D  68 00000019 R   *	    push   OFFSET prompt2
+ 00000032  E8 00000000 E   *	    call   DisplaySum
+
+ 00000037  E8 00000000 E	    call Crlf
+ 0000003C  E8 00000000 E	    call WaitMsg
+
+ 00000041  B9 00000000		    mov ecx, 0
+ 00000046  E8 00000000 E	    call ExitProcess
+ 0000004B			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/27/23 21:21:27
+(Integer Summation Program (sum_main.asm		     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000046 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000004B DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArraySum . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Clrscr . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Crlf . . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+DisplaySum . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+PromptForIntegers  . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+ReadInt  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WaitMsg  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteInt . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000004B Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+COUNT  . . . . . . . . . . . . .	Number	 00000003h   
+array  . . . . . . . . . . . . .	DWord	 00000036 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 00000019 _DATA	
+sum  . . . . . . . . . . . . . .	DWord	 00000042 _DATA	
+
+	   0 Warnings
+	   0 Errors

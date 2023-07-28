@@ -1,0 +1,166 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/28/23 23:09:06
+	9-2-1.as					     Page 1 - 1
+
+
+				title 9-2-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+				; 9-2-1
+ 00000000			.data
+ 00000000  00000014 [		    source1 dword 20 dup(0FFFFFFFFh)
+	    FFFFFFFF
+	   ]
+ 00000050  00000014 [		    target1 dword 20 dup(?)
+	    00000000
+	   ]
+ 00000000			.code
+ 00000000  FC			    cld                         ; direction = forward
+ 00000001  B9 00000014		    mov ecx, lengthof source1   ; set rep counter
+ 00000006  BE 00000000 R	    mov esi, offset source1     ; esi points to source
+ 0000000B  BF 00000050 R	    mov edi, offset target1     ; edi points to target
+ 00000010  F3/ A5		    rep movsd
+
+				; 9-2-2
+ 000000A0			.data
+ 000000A0 00001234		    source2 dword 1234h
+ 000000A4 00005678		    target2 dword 5678h
+
+ 000000A8 00001234		    source3 dword 1234h, 5678h, 2222h, 3333h
+	   00005678
+	   00002222
+	   00003333
+ 000000B8 00001234		    target3 dword 1234h, 5678h, 9999h, 3333h
+	   00005678
+	   00009999
+	   00003333
+ 00000012			.code
+ 00000012  BE 000000A0 R	    mov esi, offset source2
+ 00000017  BF 000000A4 R	    mov edi, offset target2
+ 0000001C  A7			    cmpsd                       ; compare doublewords
+ 0000001D  77 05		    ja L1                       ; jump if source > target
+ 0000001F  B8 00000001		    mov eax, 1
+ 00000024  B8 00000000		L1: mov eax, 0
+
+ 00000029  BE 000000A8 R	    mov esi, offset source3
+ 0000002E  BF 000000B8 R	    mov edi, offset target3
+ 00000033  FC			    cld                         ; direction = forward
+ 00000034  B9 00000004		    mov ecx, lengthof source3   ; repeatition counter
+ 00000039  F3/ A7		    repe cmpsd                  ; repeat while equal (ECX > 0 && ZF = 1)
+
+				; 9-2-3
+ 000000C8			.data
+ 000000C8 41 42 43 44 45	    alpha byte "ABCDEFGH", 0
+	   46 47 48 00
+ 0000003B			.code
+ 0000003B  BF 000000C8 R	    mov edi, offset alpha       ; EDI points to the string
+ 00000040  B0 46		    mov al, 'F'                 ; search for the letter 'F'
+ 00000042  B9 00000009		    mov ecx, lengthof alpha     ; set the search count
+ 00000047  FC			    cld                         ; direction = forward
+ 00000048  F2/ AE		    repne scasb                 ; repeat while not equal
+ 0000004A  75 01		    jnz quit                    ; quit if letter not found
+ 0000004C  4F			    dec edi                     ; found: back up EDI
+ 0000004D			quit:
+ 0000004D  90			    nop
+
+				; 9-2-4
+ 000000D1			.data
+ = 00000064			    COUNT = 100
+ 000000D1  00000064 [		    string1 byte COUNT dup(?)
+	    00
+	   ]
+ 0000004E			.code
+ 0000004E  B0 FF		    mov al, 0FFh                ; value to be stored
+ 00000050  BF 000000D1 R	    mov edi, offset string1     ; EDI points to target
+ 00000055  B9 00000064		    mov ecx, COUNT              ; character count
+ 0000005A  FC			    cld                         ; direction = forward
+ 0000005B  F3/ AA		    rep stosb                   ; fill with contents of AL
+
+				; 9-2-5
+ 00000135			.data
+ 00000135 00000001		    array      dword 1, 2, 3, 4, 5, 6, 7, 8, 9, 10  ; test data
+	   00000002
+	   00000003
+	   00000004
+	   00000005
+	   00000006
+	   00000007
+	   00000008
+	   00000009
+	   0000000A
+ 0000015D 0000000A		    multiplier dword 10                             ; test data
+ 0000005D			.code
+ 0000005D  FC			    cld                     ; direction = forward
+ 0000005E  BE 00000135 R	    mov esi, offset array   ; source index
+ 00000063  8B FE		    mov edi, esi            ; destination index
+ 00000065  B9 0000000A		    mov ecx, lengthof array ; loop counter
+ 0000006A  AD			L2: lodsd                   ; load [ESI] into EAX
+ 0000006B  F7 25 0000015D R	    mul multiplier          ; multiply by a value
+ 00000071  AB			    stosd                   ; store EAX into [EDI]
+ 00000072  E2 F6		    loop L2
+
+ 00000074  B9 00000000		    mov ecx, 0
+ 00000079  E8 00000000 E	    call ExitProcess
+ 0000007E			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/28/23 23:09:06
+	9-2-1.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000161 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007E DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007E Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000024 _TEXT	
+  quit . . . . . . . . . . . . .	L Near	 0000004D _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000006A _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+COUNT  . . . . . . . . . . . . .	Number	 00000064h   
+alpha  . . . . . . . . . . . . .	Byte	 000000C8 _DATA	
+array  . . . . . . . . . . . . .	DWord	 00000135 _DATA	
+multiplier . . . . . . . . . . .	DWord	 0000015D _DATA	
+source1  . . . . . . . . . . . .	DWord	 00000000 _DATA	
+source2  . . . . . . . . . . . .	DWord	 000000A0 _DATA	
+source3  . . . . . . . . . . . .	DWord	 000000A8 _DATA	
+string1  . . . . . . . . . . . .	Byte	 000000D1 _DATA	
+target1  . . . . . . . . . . . .	DWord	 00000050 _DATA	
+target2  . . . . . . . . . . . .	DWord	 000000A4 _DATA	
+target3  . . . . . . . . . . . .	DWord	 000000B8 _DATA	
+
+	   0 Warnings
+	   0 Errors

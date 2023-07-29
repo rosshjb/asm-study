@@ -1,0 +1,289 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/29/23 17:48:27
+	9-3-1.as					     Page 1 - 1
+
+
+				title 9-3-1.asm
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				Str_compare proto string1:ptr byte, string2:ptr byte
+				Str_length  proto pString:ptr byte
+				Str_copy    proto source:ptr byte, target:ptr byte
+				Str_trim    proto pString:ptr byte, char:byte
+				Str_ucase   proto pString:ptr byte
+				ExitProcess proto dwExitCode:dword
+
+ 00000000			.data
+ 00000000 41 42 43 44 45	    string_1 byte "ABCDEFG", 0
+	   46 47 00
+ 00000008 41 42 43 44 45	    string_2 byte "ABCDEFG", 0
+	   46 47 00
+ 00000010  00000008 [		    string_3 byte 8 dup(0FFh)
+	    FF
+	   ]
+ 00000018 48 65 6C 6C 6F	    string_4 byte "Hello##", 0
+	   23 23 00
+ 00000020 61 42 32 33 34	    string_5 byte "aB234cdEfg", 0
+	   63 64 45 66 67
+	   00
+ 00000000			.code
+ 00000000			main proc
+				    invoke Str_compare, addr string_1, addr string_2
+ 00000000  68 00000008 R   *	    push   OFFSET string_2
+ 00000005  68 00000000 R   *	    push   OFFSET string_1
+ 0000000A  E8 00000039	   *	    call   Str_compare
+				    invoke Str_length, addr string_1
+ 0000000F  68 00000000 R   *	    push   OFFSET string_1
+ 00000014  E8 00000059	   *	    call   Str_length
+				    invoke Str_copy, addr string_1, addr string_3
+ 00000019  68 00000010 R   *	    push   OFFSET string_3
+ 0000001E  68 00000000 R   *	    push   OFFSET string_1
+ 00000023  E8 00000064	   *	    call   Str_copy
+				    invoke Str_trim, addr string_4, '#'
+ 00000028  6A 23	   *	    push   +000000023h
+ 0000002A  68 00000018 R   *	    push   OFFSET string_4
+ 0000002F  E8 0000007B	   *	    call   Str_trim
+				    invoke Str_ucase, addr string_5
+ 00000034  68 00000020 R   *	    push   OFFSET string_5
+ 00000039  E8 0000009F	   *	    call   Str_ucase
+
+ 0000003E  B9 00000000		    mov ecx, 0
+ 00000043  E8 00000000 E	    call ExitProcess
+ 00000048			main endp
+
+				; ------------------------------------------------------------------------------
+ 00000048			Str_compare proc uses eax edx esi edi,
+				    string1:ptr byte,
+				    string2:ptr byte
+				; Compare two strings. Affects the Zero and Carry flags exactly as they would
+				; be by the CMP instruction.
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ 00000048  55		   *	    push   ebp
+ 00000049  8B EC	   *	    mov    ebp, esp
+ 0000004B  50		   *	    push   eax
+ 0000004C  52		   *	    push   edx
+ 0000004D  56		   *	    push   esi
+ 0000004E  57		   *	    push   edi
+ 0000004F  8B 75 08		    mov esi, string1
+ 00000052  8B 7D 0C		    mov edi, string2
+ 00000055  8A 06		L1: mov al, [esi]
+ 00000057  8A 17		    mov dl, [edi]
+ 00000059  3C 00		    cmp al, 0           ; end of string?
+ 0000005B  75 07		    jne L2              ; no
+ 0000005D  80 FA 00		    cmp dl, 0           ; yes: end of string2?
+ 00000060  75 02		    jne L2              ; no
+ 00000062  EB 06		    jmp L3              ; yes: exit with ZF = 1
+ 00000064			L2:
+ 00000064  46			    inc esi             ; point to next
+ 00000065  47			    inc edi
+ 00000066  3A C2		    cmp al, dl          ; characters equal?
+ 00000068  74 EB		    je L1               ; yes: continue loop
+				                        ; no: exit with flags set
+ 0000006A			L3: ret
+ 0000006A  5F		   *	    pop    edi
+ 0000006B  5E		   *	    pop    esi
+ 0000006C  5A		   *	    pop    edx
+ 0000006D  58		   *	    pop    eax
+ 0000006E  C9		   *	    leave  
+ 0000006F  C2 0008	   *	    ret    00008h
+ 00000072			Str_compare endp
+
+				; ------------------------------------------------------------------------------
+ 00000072			Str_length proc USES edi,
+				    pString:ptr byte
+				; Return the length of a null-terminated string.
+				; Receives: pString (pointer to a string)
+				; Returns: EAX = string length
+				; ------------------------------------------------------------------------------
+ 00000072  55		   *	    push   ebp
+ 00000073  8B EC	   *	    mov    ebp, esp
+ 00000075  57		   *	    push   edi
+ 00000076  8B 7D 08		    mov edi, pString
+ 00000079  B8 00000000		    mov eax, 0              ; character count
+ 0000007E			L1:
+ 0000007E  80 3F 00			cmp byte ptr [edi], 0   ; end of string?
+ 00000081  74 04			je L2                   ; yes: quit
+ 00000083  47				inc edi                 ; no: point to next
+ 00000084  40				inc eax                 ; add 1 to count
+ 00000085  EB F7			jmp L1
+ 00000087			L2: ret
+ 00000087  5F		   *	    pop    edi
+ 00000088  C9		   *	    leave  
+ 00000089  C2 0004	   *	    ret    00004h
+ 0000008C			Str_length endp
+
+				; ------------------------------------------------------------------------------
+ 0000008C			Str_copy proc uses eax ecx esi edi,
+				    source:ptr byte,        ; source string
+				    target:ptr byte         ; target string
+				; Copy a string from source to target.
+				; Returns: nothing
+				; Requires: the target string must contain enough space to hold a copy
+				;           of the source string.
+				; ------------------------------------------------------------------------------
+ 0000008C  55		   *	    push   ebp
+ 0000008D  8B EC	   *	    mov    ebp, esp
+ 0000008F  50		   *	    push   eax
+ 00000090  51		   *	    push   ecx
+ 00000091  56		   *	    push   esi
+ 00000092  57		   *	    push   edi
+				    invoke Str_length, source   ; EAX = length source
+ 00000093  FF 75 08	   *	    push   dword  ptr ss:[ebp]+000000008h
+ 00000096  E8 FFFFFFD7	   *	    call   Str_length
+ 0000009B  8B C8		    mov ecx, eax                ; REP count
+ 0000009D  41			    inc ecx                     ; add 1 for null byte
+
+ 0000009E  8B 75 08		    mov esi, source
+ 000000A1  8B 7D 0C		    mov edi, target
+ 000000A4  FC			    cld                         ; direction = forward
+ 000000A5  F3/ A4		    rep movsb                   ; copy the string
+				    ret
+ 000000A7  5F		   *	    pop    edi
+ 000000A8  5E		   *	    pop    esi
+ 000000A9  59		   *	    pop    ecx
+ 000000AA  58		   *	    pop    eax
+ 000000AB  C9		   *	    leave  
+ 000000AC  C2 0008	   *	    ret    00008h
+ 000000AF			Str_copy endp
+
+				; ------------------------------------------------------------------------------
+ 000000AF			Str_trim proc uses eax ecx edi,
+				    pString:ptr byte,           ; points to string
+				    char:byte                   ; char to remove
+				; Remove all occurences of a given character from the end of a string. 
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ 000000AF  55		   *	    push   ebp
+ 000000B0  8B EC	   *	    mov    ebp, esp
+ 000000B2  50		   *	    push   eax
+ 000000B3  51		   *	    push   ecx
+ 000000B4  57		   *	    push   edi
+ 000000B5  8B 7D 08		    mov edi, pString
+				    invoke Str_length, edi      ; returns the length in EAX
+ 000000B8  57		   *	    push   edi
+ 000000B9  E8 FFFFFFB4	   *	    call   Str_length
+
+ 000000BE  83 F8 00		    cmp eax, 0                  ; is the length equal to zero?
+ 000000C1  74 13		    je L3                       ; yes: exit now
+ 000000C3  8B C8		    mov ecx, eax                ; no: ECX = string length
+
+ 000000C5  48			    dec eax
+ 000000C6  03 F8		    add edi, eax                ; point to last character
+					
+ 000000C8  8A 07		L1:	mov al, [edi]               ; get a character
+ 000000CA  3A 45 0C		    cmp al, char                ; character to be trimmed?
+ 000000CD  75 03		    jne L2                      ; no: insert null byte
+ 000000CF  4F			    dec edi                     ; yes: keep backing up
+ 000000D0  E2 F6		    loop L1                     ; until beginning reached
+ 000000D2  C6 47 01 00		L2: mov byte ptr [edi + 1], 0   ; insert a null byte
+ 000000D6			L3: ret
+ 000000D6  5F		   *	    pop    edi
+ 000000D7  59		   *	    pop    ecx
+ 000000D8  58		   *	    pop    eax
+ 000000D9  C9		   *	    leave  
+ 000000DA  C2 0008	   *	    ret    00008h
+ 000000DD			Str_trim endp
+
+				; ------------------------------------------------------------------------------
+ 000000DD			Str_ucase proc uses eax esi,
+				    pString:ptr byte
+				; Converts a null-terminated string to uppercase.
+				; Returns: nothing
+				; ------------------------------------------------------------------------------
+ 000000DD  55		   *	    push   ebp
+ 000000DE  8B EC	   *	    mov    ebp, esp
+ 000000E0  50		   *	    push   eax
+ 000000E1  56		   *	    push   esi
+ 000000E2  8B 75 08		    mov esi, pString
+ 000000E5			L4:
+ 000000E5  8A 06		    mov al, [esi]                   ; get char
+ 000000E7  3C 00		    cmp al, 0                       ; end of string?
+ 000000E9  74 0E		    je L6                           ; yes: quit
+ 000000EB  3C 61		    cmp al, 'a'                     ; below 'a'?
+ 000000ED  72 07		    jb L5
+ 000000EF  3C 7A		    cmp al, 'z'                     ; above 'z'?
+ 000000F1  77 03		    ja L5
+ 000000F3  80 26 DF		    and byte ptr [esi], 11011111b   ; convert the char
+ 000000F6			L5:
+ 000000F6  46			    inc esi                         ; next char
+ 000000F7  EB EC		    jmp L4
+ 000000F9			L6: ret
+ 000000F9  5E		   *	    pop    esi
+ 000000FA  58		   *	    pop    eax
+ 000000FB  C9		   *	    leave  
+ 000000FC  C2 0004	   *	    ret    00004h
+ 000000FF			Str_ucase endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/29/23 17:48:27
+	9-3-1.as					     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000002B DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000FF DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+Str_compare  . . . . . . . . . .	P Near	 00000048 _TEXT	Length= 0000002A Public STDCALL
+  string1  . . . . . . . . . . .	DWord	 bp + 00000008
+  string2  . . . . . . . . . . .	DWord	 bp + 0000000C
+  L1 . . . . . . . . . . . . . .	L Near	 00000055 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000064 _TEXT	
+  L3 . . . . . . . . . . . . . .	L Near	 0000006A _TEXT	
+Str_copy . . . . . . . . . . . .	P Near	 0000008C _TEXT	Length= 00000023 Public STDCALL
+  source . . . . . . . . . . . .	DWord	 bp + 00000008
+  target . . . . . . . . . . . .	DWord	 bp + 0000000C
+Str_length . . . . . . . . . . .	P Near	 00000072 _TEXT	Length= 0000001A Public STDCALL
+  pString  . . . . . . . . . . .	DWord	 bp + 00000008
+  L1 . . . . . . . . . . . . . .	L Near	 0000007E _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 00000087 _TEXT	
+Str_trim . . . . . . . . . . . .	P Near	 000000AF _TEXT	Length= 0000002E Public STDCALL
+  pString  . . . . . . . . . . .	DWord	 bp + 00000008
+  char . . . . . . . . . . . . .	Byte	 bp + 0000000C
+  L1 . . . . . . . . . . . . . .	L Near	 000000C8 _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 000000D2 _TEXT	
+  L3 . . . . . . . . . . . . . .	L Near	 000000D6 _TEXT	
+Str_ucase  . . . . . . . . . . .	P Near	 000000DD _TEXT	Length= 00000022 Public STDCALL
+  pString  . . . . . . . . . . .	DWord	 bp + 00000008
+  L4 . . . . . . . . . . . . . .	L Near	 000000E5 _TEXT	
+  L5 . . . . . . . . . . . . . .	L Near	 000000F6 _TEXT	
+  L6 . . . . . . . . . . . . . .	L Near	 000000F9 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000048 Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+string_1 . . . . . . . . . . . .	Byte	 00000000 _DATA	
+string_2 . . . . . . . . . . . .	Byte	 00000008 _DATA	
+string_3 . . . . . . . . . . . .	Byte	 00000010 _DATA	
+string_4 . . . . . . . . . . . .	Byte	 00000018 _DATA	
+string_5 . . . . . . . . . . . .	Byte	 00000020 _DATA	
+
+	   0 Warnings
+	   0 Errors

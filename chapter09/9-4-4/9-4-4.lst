@@ -1,0 +1,85 @@
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/29/23 20:05:00
+1Two-dimensional arrays in 64-bit mode (9-4-4.asm	     Page 1 - 1
+
+
+				title Two-dimensional arrays in 64-bit mode (9-4-4.asm)
+
+				ExitProcess proto
+
+ 00000000			.data
+ 00000000			    table qword 1, 2, 3, 4, 5
+	   0000000000000001
+	   0000000000000002
+	   0000000000000003
+	   0000000000000004
+	   0000000000000005
+ 00000028 = 00000028		    ROW_SIZE = ($ - table)
+ 00000028  0000000000000006	          qword 6, 7, 8, 9, 10
+	   0000000000000007
+	   0000000000000008
+	   0000000000000009
+	   000000000000000A
+ 00000050  000000000000000B	          qword 11, 12, 13, 14, 15
+	   000000000000000C
+	   000000000000000D
+	   000000000000000E
+	   000000000000000F
+ 00000000			.code
+ 00000000			main proc
+ 00000000  48/ C7 C0		    mov rax, 1              ; row index (zero-based)
+	   00000001
+ 00000007  48/ C7 C6		    mov rsi, 4              ; column index (zero-based)
+	   00000004
+ 0000000E  E8 0000000A		    call get_tableVal       ; returns the value in RAX (0Ah = 10d)
+
+ 00000013  B9 00000000		    mov ecx, 0
+ 00000018  E8 00000000 E	    call ExitProcess
+ 0000001D			main endp
+
+				; ------------------------------------------------------------------------------
+ 0000001D			get_tableVal proc uses rbx rdi
+				; Returns the array valuje at a given row and colunm in a two-dimensional
+				; array of quadwords.
+				; Receives: RAX = row number, RSI = column number
+				; Returns: value in RAX
+				; ------------------------------------------------------------------------------
+ 0000001D  53		   *	    push   rbx
+ 0000001E  57		   *	    push   rdi
+ 0000001F  48/ BB		    mov rbx, ROW_SIZE
+	   0000000000000028
+ 00000029  48/ F7 E3		    mul rbx                                 ; product(low) = RAX
+ 0000002C  48/ 8D 3D		    lea rdi, offset table
+	   00000000 R
+ 00000033  48/ 03 F8		    add rdi, rax                            ; row offset
+ 00000036  48/ 8B 04 F7		    mov rax, [rdi + rsi * type table]       ; [row offset + column offset]
+				    ret
+ 0000003A  5F		   *	    pop    rdi
+ 0000003B  5B		   *	    pop    rbx
+ 0000003C  C3		   *	    ret    00000h
+ 0000003D			get_tableVal endp
+
+				end
+Microsoft (R) Macro Assembler (x64) Version 14.35.32216.1   07/29/23 20:05:00
+1Two-dimensional arrays in 64-bit mode (9-4-4.asm	     Symbols 2 - 1
+
+
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P 	 00000000 Length= 00000000 External
+get_tableVal . . . . . . . . . .	P 	 0000001D _TEXT	Length= 00000020 Public
+main . . . . . . . . . . . . . .	P 	 00000000 _TEXT	Length= 0000001D Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+ROW_SIZE . . . . . . . . . . . .	Number	 00000028h   
+table  . . . . . . . . . . . . .	QWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors

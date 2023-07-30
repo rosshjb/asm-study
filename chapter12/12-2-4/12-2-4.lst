@@ -1,0 +1,220 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/31/23 01:39:39
+12-2-							     Page 1 - 1
+
+
+				title 12-2-4
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+
+				ExitProcess proto, dwExitCode:dword
+
+ 00000000			.code
+ 00000000			main proc
+ 00000000  9B DB E3		    finit
+
+				; 12-2-4
+ 00000000			.data
+ 00000000			    dblOne   real8 234.56
+	   406D51EB851EB852
+ 00000008			    dblTwo   real8 10.1
+	   4024333333333333
+ 00000010			    dblThree real8 ?
+	   0000000000000000
+ 00000018			    dblFour  real8 ?
+	   0000000000000000
+ 00000003			.code
+ 00000003  DD 05 00000000 R	    fld dblOne      ; ST(0) = dblOne
+ 00000009  DD 05 00000008 R	    fld dblTwo      ; ST(0) = dblTwo, ST(1) = dblOne
+
+ 0000000F  DD 15 00000010 R	    fst dblThree    ; dblThree = 10.1
+ 00000015  DD 15 00000018 R	    fst dblFour     ; dblFour = 10.1
+
+ 0000001B  DD 1D 00000010 R	    fstp dblThree   ; dblThree = 10.1
+ 00000021  DD 1D 00000018 R	    fstp dblFour    ; dbdlFour = 234.56
+
+				; 12-2-5
+ 00000020			.data
+ 00000020 436A8F5C		    dbl1 real4 234.56
+ 00000024 4121999A		    dbl2 real4 10.1
+ 00000028			    dbl3 real8 1234.56
+	   40934A3D70A3D70A
+ 00000030			    dbl4 real8 10.0
+	   4024000000000000
+ 00000038 3DCCCCCD		    mySingle real4 0.1
+ 0000003C 00000001		    myInteger dword 1
+ 00000040 00000002		    myInteger2 dword 2
+ 00000027			.code
+				    ; fchs, fabs
+ 00000027  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000002D  D9 E0		    fchs                ; ST(0) = -234.56
+ 0000002F  D9 E1		    fabs                ; ST(0) = 234.56
+
+				    ; fadd, faddp, fiadd
+ 00000031  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 00000037  DE C1		    fadd                ; ST(0) = 244.66
+
+ 00000039  9B DB E3		    finit
+ 0000003C  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 00000042  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 00000048  DC C1		    fadd st(1), st(0)   ; ST(0) = 10.1, ST(1) = 244.66
+
+ 0000004A  9B DB E3		    finit
+ 0000004D  D9 05 00000020 R	    fld dbl1                    ; ST(0) = 234.56
+ 00000053  D8 05 00000038 R	    fadd mySingle               ; ST(0) = 234.66
+ 00000059  BE 00000038 R	    mov esi, offset mySingle
+ 0000005E  D8 06		    fadd real4 ptr [esi]        ; ST(0) = 234.76
+
+ 00000060  9B DB E3		    finit
+ 00000063  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 00000069  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 0000006F  DE C1		    faddp st(1), st(0)  ; ST(0) = 244.66
+
+ 00000071  9B DB E3		    finit
+ 00000074  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000007A  DA 05 0000003C R	    fiadd myInteger     ; ST(0) = 235.56
+
+				    ; fsub, fsubp, fisub
+ 00000080  9B DB E3		    finit
+ 00000083  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 00000089  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 0000008F  DE E9		    fsub                ; ST(0) = 224.46
+
+ 00000091  9B DB E3		    finit
+ 00000094  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000009A  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 000000A0  DC E9		    fsub st(1), st(0)   ; ST(0) = 10.1, ST(1) = 224.46
+
+ 000000A2  9B DB E3		    finit
+ 000000A5  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 000000AB  D8 25 00000038 R	    fsub mySingle       ; ST(0) = 234.46
+
+ 000000B1  9B DB E3		    finit
+ 000000B4  D9 05 00000020 R	    fld dbl1                ; ST(0) = 234.56
+ 000000BA  BE 00000024 R	    mov esi, offset dbl2
+ 000000BF  D8 26		    fsub real4 ptr [esi]    ; ST(0) = 224.46
+
+ 000000C1  9B DB E3		    finit
+ 000000C4  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 000000CA  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 000000D0  DE E9		    fsubp st(1), st(0)  ; ST(0) = 224.46
+
+ 000000D2  9B DB E3		    finit
+ 000000D5  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 000000DB  DA 25 0000003C R	    fisub myInteger     ; ST(0) = 233.56
+
+				    ; fmul, fmulp, fimul
+ 000000E1  9B DB E3		    finit
+ 000000E4  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 000000EA  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 000000F0  DE C9		    fmul                ; ST(0) = 2369.056
+
+ 000000F2  9B DB E3		    finit
+ 000000F5  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 000000FB  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 00000101  DC C9		    fmul st(1), st(0)   ; ST(0) = 10.1, ST(1) = 2369.056
+
+ 00000103  9B DB E3		    finit
+ 00000106  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000010C  D8 0D 00000038 R	    fmul mySingle       ; ST(0) = 23.456
+
+ 00000112  9B DB E3		    finit
+ 00000115  D9 05 00000020 R	    fld dbl1                ; ST(0) = 234.56
+ 0000011B  BE 00000024 R	    mov esi, offset dbl2
+ 00000120  D8 0E		    fmul real4 ptr [esi]    ; ST(0) = 2369.056
+
+ 00000122  9B DB E3		    finit
+ 00000125  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000012B  D9 05 00000024 R	    fld dbl2            ; ST(0) = 10.1, ST(1) = 234.56
+ 00000131  DE C9		    fmulp st(1), st(0)  ; ST(0) = 2369.056
+
+ 00000133  9B DB E3		    finit
+ 00000136  D9 05 00000020 R	    fld dbl1            ; ST(0) = 234.56
+ 0000013C  DA 0D 0000003C R	    fimul myInteger     ; ST(0) = 234.56
+
+				    ; fdiv ,fdivp, fidiv
+ 00000142  9B DB E3		    finit
+ 00000145  DD 05 00000028 R	    fld dbl3            ; ST(0) = 1234.56
+ 0000014B  DD 05 00000030 R	    fld dbl4            ; ST(0) = 10.0, ST(1) = 1234.56
+ 00000151  DE F9		    fdiv                ; ST(0) = 123.456
+
+ 00000153  9B DB E3		    finit
+ 00000156  DD 05 00000028 R	    fld dbl3            ; ST(0) = 1234.56
+ 0000015C  DD 05 00000030 R	    fld dbl4            ; ST(0) = 10.0, ST(1) = 1234.56
+ 00000162  DC F9		    fdiv st(1), st(0)   ; ST(0) = 10.0, ST(1) = 123.456
+
+ 00000164  9B DB E3		    finit
+ 00000167  DD 05 00000028 R	    fld dbl3            ; ST(0) = 1234.56
+ 0000016D  DC 35 00000030 R	    fdiv dbl4           ; ST(0) = 123.456
+
+ 00000173  9B DB E3		    finit
+ 00000176  DD 05 00000028 R	    fld dbl3                ; ST(0) = 1234.56
+ 0000017C  BE 00000030 R	    mov esi, offset dbl4
+ 00000181  DC 36		    fdiv real8 ptr [esi]    ; ST(0) = 123.456
+
+ 00000183  9B DB E3		    finit
+ 00000186  DD 05 00000028 R	    fld dbl3            ; ST(0) = 1234.56
+ 0000018C  DD 05 00000030 R	    fld dbl4            ; ST(0) = 10.0, ST(1) = 1234.56
+ 00000192  DE F9		    fdivp st(1), st(0)  ; ST(0) = 123.456
+
+ 00000194  9B DB E3		    finit
+ 00000197  DD 05 00000028 R	    fld dbl3            ; ST(0) = 1234.56
+ 0000019D  DA 35 00000040 R	    fidiv myInteger2    ; ST(0) = 617.28
+
+ 000001A3  B9 00000000		    mov ecx, 0
+ 000001A8  E8 00000000 E	    call ExitProcess
+ 000001AD			main endp
+
+				end main
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    07/31/23 01:39:39
+12-2-							     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000044 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000001AD DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000001AD Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+dbl1 . . . . . . . . . . . . . .	DWord	 00000020 _DATA	
+dbl2 . . . . . . . . . . . . . .	DWord	 00000024 _DATA	
+dbl3 . . . . . . . . . . . . . .	QWord	 00000028 _DATA	
+dbl4 . . . . . . . . . . . . . .	QWord	 00000030 _DATA	
+dblFour  . . . . . . . . . . . .	QWord	 00000018 _DATA	
+dblOne . . . . . . . . . . . . .	QWord	 00000000 _DATA	
+dblThree . . . . . . . . . . . .	QWord	 00000010 _DATA	
+dblTwo . . . . . . . . . . . . .	QWord	 00000008 _DATA	
+myInteger2 . . . . . . . . . . .	DWord	 00000040 _DATA	
+myInteger  . . . . . . . . . . .	DWord	 0000003C _DATA	
+mySingle . . . . . . . . . . . .	DWord	 00000038 _DATA	
+
+	   0 Warnings
+	   0 Errors

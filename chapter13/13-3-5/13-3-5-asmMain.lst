@@ -1,0 +1,161 @@
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    08/08/23 01:28:57
++asm program launched from C++ (asmMain.asm		     Page 1 - 1
+
+
+				title asm program launched from C++ (asmMain.asm)
+				option casemap:none
+				includelib legacy_stdio_definitions.lib
+
+				.686p
+				.model flat, c
+
+				system proto pCommand:ptr byte
+				printf proto c, format:ptr byte, args:vararg
+				scanf  PROTO, pFormat:PTR BYTE,pBuffer:PTR BYTE, args:VARARG
+				fopen  proto mode:ptr byte, filename:ptr byte
+				fclose proto pFile:dword
+
+ = 00001388			BUFFER_SIZE = 5000
+ 00000000			.data
+ 00000000 63 6C 73 00		    str1 byte "cls", 0
+ 00000004 64 69 72 2F 77	    str2 byte "dir/w", 0
+	   00
+ 0000000A 45 6E 74 65 72	    str3 byte "Enter the name of a file:", 0
+	   20 74 68 65 20
+	   6E 61 6D 65 20
+	   6F 66 20 61 20
+	   66 69 6C 65 3A
+	   00
+ 00000024 25 73 00		    str4 byte "%s", 0
+ 00000027 63 61 6E 6E 6F	    str5 byte "cannot open file", 0dh, 0ah, 0
+	   74 20 6F 70 65
+	   6E 20 66 69 6C
+	   65 0D 0A 00
+ 0000003A 54 68 65 20 66	    str6 byte "The file has been opened", 0dh, 0ah, 0
+	   69 6C 65 20 68
+	   61 73 20 62 65
+	   65 6E 20 6F 70
+	   65 6E 65 64 0D
+	   0A 00
+ 00000055 72 00			    modeStr byte "r", 0
+
+ 00000057  0000003C [		    fileName byte 60 dup(0)
+	    00
+	   ]
+ 00000093 00000000		    pBuf dword ?
+ 00000097 00000000		    pFile dword ?
+ 00000000			.code
+ 00000000			asm_main proc
+				    ; clear the screen, display disk directory
+ 00000000  68 00000000 R	    push offset str1
+ 00000005  E8 00000000 E	    call system
+ 0000000A  83 C4 04		    add esp, 4
+
+				    invoke system, addr str2
+ 0000000D  68 00000004 R   *	    push   OFFSET str2
+ 00000012  E8 00000000 E   *	    call   system
+ 00000017  83 C4 04	   *	    add    esp, 000000004h
+
+				    ; ask for a filename
+ 0000001A  68 0000000A R	    push offset str3
+ 0000001F  E8 00000000 E	    call printf
+ 00000024  83 C4 04		    add esp, 4
+
+				    invoke scanf, addr str4, addr fileName
+ 00000027  68 00000057 R   *	    push   OFFSET fileName
+ 0000002C  68 00000024 R   *	    push   OFFSET str4
+ 00000031  E8 00000000 E   *	    call   scanf
+ 00000036  83 C4 08	   *	    add    esp, 000000008h
+
+				    ; try to open the file
+				    invoke fopen, addr fileName, addr modeStr
+ 00000039  68 00000055 R   *	    push   OFFSET modeStr
+ 0000003E  68 00000057 R   *	    push   OFFSET fileName
+ 00000043  E8 00000000 E   *	    call   fopen
+ 00000048  83 C4 08	   *	    add    esp, 000000008h
+ 0000004B  A3 00000097 R	    mov pFile, eax
+
+				    .if eax == 0    ; cannot open file?
+ 00000050  0B C0	   *	    or	eax, eax
+ 00000052  75 11	   *	    jne    @C0001
+				        invoke printf, addr str5
+ 00000054  68 00000027 R   *	    push   OFFSET str5
+ 00000059  E8 00000000 E   *	    call   printf
+ 0000005E  83 C4 04	   *	    add    esp, 000000004h
+ 00000061  EB 1D		        jmp quit
+				    .else
+ 00000063  EB 0D	   *	    jmp    @C0003
+ 00000065		   *@C0001:
+				        invoke printf, addr str6
+ 00000065  68 0000003A R   *	    push   OFFSET str6
+ 0000006A  E8 00000000 E   *	    call   printf
+ 0000006F  83 C4 04	   *	    add    esp, 000000004h
+				    .endif
+ 00000072		   *@C0003:
+
+				    ; close the file
+				    invoke fclose, pFile
+ 00000072  FF 35 00000097 R *	    push   pFile
+ 00000078  E8 00000000 E   *	    call   fclose
+ 0000007D  83 C4 04	   *	    add    esp, 000000004h
+
+ 00000080			quit:
+ 00000080  C3			    ret
+ 00000081			asm_main endp
+
+				end
+Microsoft (R) Macro Assembler Version 14.35.32216.1	    08/08/23 01:28:57
++asm program launched from C++ (asmMain.asm		     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000009B Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000081 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+asm_main . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000081 Public C
+  quit . . . . . . . . . . . . .	L Near	 00000080 _TEXT	
+fclose . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+fopen  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+system . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000001h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+BUFFER_SIZE  . . . . . . . . . .	Number	 00001388h   
+fileName . . . . . . . . . . . .	Byte	 00000057 _DATA	
+modeStr  . . . . . . . . . . . .	Byte	 00000055 _DATA	
+pBuf . . . . . . . . . . . . . .	DWord	 00000093 _DATA	
+pFile  . . . . . . . . . . . . .	DWord	 00000097 _DATA	
+str1 . . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+str2 . . . . . . . . . . . . . .	Byte	 00000004 _DATA	
+str3 . . . . . . . . . . . . . .	Byte	 0000000A _DATA	
+str4 . . . . . . . . . . . . . .	Byte	 00000024 _DATA	
+str5 . . . . . . . . . . . . . .	Byte	 00000027 _DATA	
+str6 . . . . . . . . . . . . . .	Byte	 0000003A _DATA	
+
+	   0 Warnings
+	   0 Errors

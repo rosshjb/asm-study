@@ -1,0 +1,22 @@
+# make -f makefile5-3
+# make -f makefile5-3 DEBUG=1
+# make -f makefile5-3 clean
+
+NMS  = 5-3
+OBJS = $(NMS).o
+BINS = $(NMS)
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+$(BINS): $(OBJS)
+	ld -o $(BINS) $(OBJS)
+
+clean:
+	rm $(BINS) $(OBJS)

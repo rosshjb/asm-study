@@ -1,0 +1,20 @@
+# make -f makefile4-2-2 DEBUG=1
+# make -f makefile4-2-2
+# make -f makefile4-2-2 clean
+
+OBJS = 4-2-2.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+4-2-2: $(OBJS)
+	ld -o 4-2-2 $(OBJS)
+
+clean:
+	rm 4-2-2 $(OBJS)

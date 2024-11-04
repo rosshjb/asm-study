@@ -1,0 +1,11 @@
+# make -f makefile3-2
+# make -f makefile3-2 clean
+
+%.o : %.s
+	as $< -o $@
+
+HelloWorld: HelloWorld.o
+	ld -o HelloWorld HelloWorld.o
+
+clean:
+	rm HelloWorld.o HelloWorld

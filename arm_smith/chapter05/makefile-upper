@@ -1,0 +1,22 @@
+# make -f makefile-upper
+# make -f makefile-upper DEBUG=1
+# make -f makefile-upper clean
+
+NMS  = upper
+OBJS = $(NMS).o
+BINS = $(NMS)
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+$(BINS): $(OBJS)
+	ld -o $(BINS) $(OBJS)
+
+clean:
+	rm $(BINS) $(OBJS)

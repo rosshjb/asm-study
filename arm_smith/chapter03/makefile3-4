@@ -1,0 +1,20 @@
+# make -f makefile3-4
+# make -f makefile3-4 DEBUG=1
+# make -f makefile3-4 clean
+
+OBJS = movexamps.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+movexamps: $(OBJS)
+	ld -o movexamps $(OBJS)
+
+clean:
+	rm $(OBJS) movexamps

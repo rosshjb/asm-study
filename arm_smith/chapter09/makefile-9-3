@@ -1,0 +1,18 @@
+# make -f makefile9-3
+# make -f makefile9-3 DEBUG=1
+# make -f makefile9-3 clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+all: addexamp2
+
+addexamp2: addexamp2.s debug.s
+	gcc -o addexamp2 addexamp2.s
+
+clean:
+	rm addexamp2

@@ -1,0 +1,18 @@
+# make -f makefile9-8
+# make -f makefile9-8 DEBUG=1 -B
+# make -f makefile9-8 clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+all: uppertst
+
+uppertst: 9-8.c 
+	gcc -o uppertst4 9-8.c
+
+clean:
+	rm uppertst4

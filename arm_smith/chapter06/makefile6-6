@@ -1,0 +1,22 @@
+# make -f makefile6-6
+# make -f makefile6-6 DEBUG=1
+# make -f makefile6-6 clean
+
+NMS  = 6-6
+OBJS = $(NMS).o
+BINS = $(NMS)
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+$(BINS): $(OBJS)
+	ld -o $(BINS) $(OBJS)
+
+clean:
+	rm $(BINS) $(OBJS)

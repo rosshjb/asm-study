@@ -1,0 +1,36 @@
+# make -f makefile9-7
+# make -f makefile9-7 DEBUG=1 -B
+# make -f makefile9-7 clean
+
+LIBOBJS = upper.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+all: uppertst3
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+# 1. build shared library
+# 2. move the lib into shared libs dir
+# 3. create symlinks to the lib
+# 4. cache the lib to be found by the runtime linker (cached in /etc/ld.so.cache)
+libup.so.1.0: $(LIBOBJS)
+	gcc -shared -Wl,-soname,libup.so.1 -o libup.so.1.0 $(LIBOBJS)
+	mv libup.so.1.0 /usr/local/lib
+	ln -sf /usr/local/lib/libup.so.1.0 /usr/local/lib/libup.so.1
+	ln -sf /usr/local/lib/libup.so.1.0 /usr/local/lib/libup.so
+	ldconfig
+
+uppertst3: uppertst.c libup.so.1.0
+	gcc -o uppertst3 uppertst.c -lup
+
+clean:
+	rm $(LIBOBJS) uppertst3
+	rm /usr/local/lib/libup.so.1 /usr/local/lib/libup.so /usr/local/lib/libup.so.1.0
+	ldconfig

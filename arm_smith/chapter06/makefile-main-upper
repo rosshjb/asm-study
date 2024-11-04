@@ -1,0 +1,25 @@
+# make -f makefile-main-upper
+# make -f makefile-main-upper -B
+# make -f makefile-main-upper -B DEBUG=1
+# objdump -d -s -M no-aliases main.o
+
+UPPEROBJS = main.o upper.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+LSTFLGS =
+
+all : upper
+
+%.o : %.s
+	as $(DEBUGFLGS) $(LSTFLGS) $< -o $@
+
+upper : $(UPPEROBJS)
+	ld -o upper $(UPPEROBJS)
+
+clean:
+	rm upper $(UPPEROBJS)

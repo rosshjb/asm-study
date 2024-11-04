@@ -1,0 +1,25 @@
+# make -f makefile-macro
+# make -f makefile-macro -B
+# make -f makefile-macro -B DEBUG=1
+# objdump -d -s -M no-aliases mainmacro.o
+
+UPPEROBJS = mainmacro.o uppermacro.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+
+LSTFLGS =
+
+all : mainmacro
+
+%.o : %.s
+	as $(DEBUGFLGS) $(LSTFLGS) $< -o $@
+
+mainmacro : $(UPPEROBJS)
+	ld -o mainmacro $(UPPEROBJS)
+
+clean:
+	rm mainmacro $(UPPEROBJS)

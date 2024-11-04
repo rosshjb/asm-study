@@ -1,0 +1,26 @@
+# make -f makefile9-6
+# make -f makefile9-6 DEBUG=1
+# make -f makefile9-6 clean
+
+LIBOBJS = upper.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+all: uppertst2
+
+%.o : %.s
+	as $(DEBUGFLGS) $< -o $@
+
+libupper.a: $(LIBOBJS)
+	ar -cvq libupper.a upper.o
+
+uppertst2: uppertst.c libupper.a
+	gcc -o uppertst2 uppertst.c libupper.a
+
+clean:
+	rm $(LIBOBJS) libupper.a uppertst2

@@ -1,0 +1,20 @@
+# make -f makefile-divexamp
+# make -f makefile-divexamp DEBUG=1 -B
+# make -f makefile-divexamp clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: divexamp
+
+divexamp: divexamp.s
+	gcc -o divexamp $(DEBUGFLGS) divexamp.s
+
+.PHONY: clean
+clean:
+	rm -f divexamp

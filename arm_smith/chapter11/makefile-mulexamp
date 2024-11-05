@@ -1,0 +1,20 @@
+# make -f makefile-mulexamp
+# make -f makefile-mulexamp DEBUG=1 -B
+# make -f makefile-mulexamp clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: mulexamp
+
+mulexamp: mulexamp.s
+	gcc -o mulexamp $(DEBUGFLGS) mulexamp.s
+
+.PHONY: clean
+clean:
+	rm -f mulexamp

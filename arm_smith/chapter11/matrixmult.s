@@ -33,8 +33,10 @@ dotprodloop:
     subs w0, w0, #1
     b.ne dotprodloop
 
+    // store dot prod result and incr for next elem
+    str w7, [x19], #WDSIZE
+
     // update col loop counter
-    str w7, [x19], #WDSIZE      // store dot prod result and incr for next elem
     add x5, x5, #WDSIZE         // next column
     subs w2, w2, #1
     b.ne colloop

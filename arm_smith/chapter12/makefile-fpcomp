@@ -1,0 +1,20 @@
+# make -f makefile-fpcomp
+# make -f makefile-fpcomp DEBUG=1 -B
+# make -f makefile-fpcomp clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: fpcomp
+
+fpcomp: fpcomp.s fpcomp-main.s
+	gcc $(DEBUGFLGS) -o fpcomp fpcomp.s fpcomp-main.s
+
+.PHONY: clean
+clean:
+	rm -f fpcomp

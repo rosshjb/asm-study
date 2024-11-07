@@ -1,0 +1,20 @@
+# make -f makefile-distance
+# make -f makefile-distance DEBUG=1 -B
+# make -f makefile-distance clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: distance
+
+distance: distance.s distance-main.s
+	gcc $(DEBUGFLGS) -o distance distance.s distance-main.s
+
+.PHONY: clean
+clean:
+	rm -f distance

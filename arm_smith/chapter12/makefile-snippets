@@ -1,0 +1,25 @@
+# make -f makefile-snippets
+# make -f makefile-snippets DEBUG=1 -B
+# make -f makefile-snippets clean
+
+OBJS = snippets.o
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: snippets
+
+snippets: $(OBJS)
+	ld -o snippets $(OBJS)
+
+%.o: %.s
+	as -o $@ $(DEBUGFLGS) $(LSTFLGS) -march="armv8.2-a+fp16" $<
+
+.PHONY: clean
+clean:
+	rm -f $(OBJS) snippets

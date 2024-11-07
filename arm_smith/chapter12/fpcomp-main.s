@@ -17,7 +17,7 @@ loop:
     subs w19, w19, #1
     b.ne loop
 
-    // save running sum
+    // store running sum
     ldr x0, =runsum
     str s1, [x0]   
 

@@ -46,8 +46,8 @@ _start:
     scvtf d1, x1            // signed integer to double precision
     ucvtf s1, w1            // unsigned integer to single precision
 
-    fcvtas w1, h1           // half   precision to signed   integer (rounds to nearest)
-    fcvtau w1, s1           // single precision to unsigned integer (rounds to nearest)
+    fcvtas w1, h1           // half   precision to signed   integer (round to nearest)
+    fcvtau w1, s1           // single precision to unsigned integer (round to nearest)
     fcvtms x1, d1           // double precision to signed   integer (round towards -infinity)
     fcvtmu x1, d1           // double precision to unsigned integer (round towards -infinity)
     fcvtps x1, d1           // double precision to signed   integer (round towards +infinity)

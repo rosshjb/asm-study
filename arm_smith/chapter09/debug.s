@@ -10,11 +10,10 @@
     stp x16, x17, [sp, #-16]!
     stp x18, lr,  [sp, #-16]!
     
-    // must move x2 and x3 first (If not, when \reg is 0 or 1, \reg is overwritten)
+    // must move x1, x2 and x3 first (If not, when \reg is x0, the \reg is overwritten)
+    mov x1, #\reg       // for %u
     mov x2, x\reg       // for %d
     mov x3, x\reg       // for %x
-    mov x1, #\reg
-    add x1, x1, #'0'    // for %c
     ldr x0, =ptfStr     // format str
     bl printf
 
@@ -62,6 +61,6 @@
 .endm
 
 .data
-ptfStr: .asciz "X%c = %32ld, 0x%016lx\n"
+ptfStr: .asciz "x%-2u = %32ld, 0x%016lx\n"
 .align 4
 .text

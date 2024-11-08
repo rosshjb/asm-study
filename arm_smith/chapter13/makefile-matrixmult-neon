@@ -1,0 +1,20 @@
+# make -f makefile-matrixmult-neon 
+# make -f makefile-matrixmult-neon DEBUG=1 -B
+# make -f makefile-matrixmult-neon clean
+
+ifdef DEBUG
+	DEBUGFLGS = -g
+else
+	DEBUGFLGS =
+endif
+LSTFLGS =
+
+.PHONY: all
+all: matrixmult-neon
+
+matrixmult-neon: matrixmult-neon.s
+	gcc $(DEBUGFLGS) -o matrixmult-neon matrixmult-neon.s
+
+.PHONY: clean
+clean:
+	rm -f matrixmult-neon

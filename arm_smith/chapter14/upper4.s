@@ -14,7 +14,7 @@ toupper:
     ldr x2, =spaces
     ldr q8, [x2]                // load all spaces
 
-    mov w3, #N                  // loop counter (down to 0), maximum string length 16*3=48
+    mov w3, #N                  // loop counter (down to 0), maximum string length 16*4=64
 loop:
     ldr q0, [x0], #16           // load 16 chars from input string and update input pointer for next block
     sub v2.16b, v0.16b, v1.16b  // shift all 16 chars range ['a','z'] to ['a'-'a', 'z'-'a']

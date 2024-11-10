@@ -17,7 +17,7 @@ int mytoupper(const char *instr, char *outstr) {
 
 #define BUFFERSIZE 250
 
-const char *tst_str ="This is a test!";
+const char *tst_str = "This is a test!";
 char out_str[BUFFERSIZE];
 
 int main() {

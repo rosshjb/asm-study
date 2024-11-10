@@ -14,8 +14,7 @@ all: upper
 
 upper: upper.c
 	gcc $(DEBUGFLGS) -O3 -o upper upper.c
-	objdump -d upper >od.txt
 
 .PHONY: clean
 clean:
-	rm -f upper od.txt
+	rm -f upper
